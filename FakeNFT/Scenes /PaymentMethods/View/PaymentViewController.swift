@@ -71,6 +71,7 @@ class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
         button.backgroundColor = UIColor(named: "ypBlack")
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -134,6 +135,12 @@ class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     
     @objc private func backButtonTapped() {
         dismiss(animated: true)
+    }
+    
+    @objc private func payButtonTapped() {
+        let vc = SuccessViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 }
 
