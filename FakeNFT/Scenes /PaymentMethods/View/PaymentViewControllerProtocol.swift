@@ -9,4 +9,6 @@ import Foundation
 
 protocol PaymentViewControllerProtocol {
     var presenter: PaymentPresenterProtocol? { get }
+    
+    func showPaymentError()
 }

@@ -16,6 +16,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     let sortButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "sortButtonImage"), for: .normal)
+        button.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -110,6 +111,30 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             payButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -16),
             payButton.leadingAnchor.constraint(equalTo: nftTotalPriceLabel.trailingAnchor, constant: 16)
         ])
+    }
+    
+    @objc private func sortButtonTapped() {
+        let alert = UIAlertController(
+            title: nil,
+            message: "Сортировка",
+            preferredStyle: .actionSheet
+        )
+        
+        alert.addAction(UIAlertAction(title: "По цене", style: .default) { _ in
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { _ in
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
+        
+        present(alert, animated: true)
     }
     
     @objc private func payButtonTapped() {

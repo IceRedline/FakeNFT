@@ -133,6 +133,21 @@ class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
         ])
     }
     
+    func showPaymentError() {
+        let alert = UIAlertController(
+            title: nil,
+            message: "Не удалось произвести оплату",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default) { _ in
+            
+        })
+        
+        present(alert, animated: true)
+    }
+    
     @objc private func backButtonTapped() {
         dismiss(animated: true)
     }
