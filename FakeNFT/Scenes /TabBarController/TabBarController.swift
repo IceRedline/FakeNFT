@@ -12,7 +12,7 @@ final class TabBarController: UITabBarController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(systemName: "square.stack.3d.up.fill"),
@@ -21,8 +21,8 @@ final class TabBarController: UITabBarController {
     
     private let cartTabBarItem = UITabBarItem(
         title: "Корзина",
-        image: UIImage(systemName: "bag.fill"),
-        tag: 1
+        image: UIImage(named: "cartSelected"),
+        selectedImage: UIImage(named: "cartNotSelected")
     )
     
 

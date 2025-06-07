@@ -54,7 +54,7 @@ class CartTableViewCell: UITableViewCell {
             nftNameLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             starsImageView.heightAnchor.constraint(equalToConstant: 12),
             starsImageView.widthAnchor.constraint(equalToConstant: 68),
-            starsImageView.topAnchor.constraint(equalTo: nftNameLabel.bottomAnchor, constant: 4),
+            starsImageView.topAnchor.constraint(equalTo: nftNameLabel.bottomAnchor, constant: 6),
             starsImageView.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             priceLabel.topAnchor.constraint(equalTo: starsImageView.bottomAnchor, constant: 15),
             priceLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),

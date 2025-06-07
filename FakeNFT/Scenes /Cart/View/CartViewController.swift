@@ -55,6 +55,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         button.backgroundColor = UIColor(named: "ypBlack")
         button.titleLabel?.textColor = UIColor(named: "ypWhite")
         button.layer.cornerRadius = 16
+        button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -109,6 +110,12 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             payButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -16),
             payButton.leadingAnchor.constraint(equalTo: nftTotalPriceLabel.trailingAnchor, constant: 16)
         ])
+    }
+    
+    @objc private func payButtonTapped() {
+        let vc = PaymentViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 
 }
