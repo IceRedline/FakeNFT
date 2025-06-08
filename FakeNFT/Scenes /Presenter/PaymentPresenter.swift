@@ -11,14 +11,14 @@ class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     
     var view: PaymentViewControllerProtocol?
     
-    let currencies = [CurrencyModel(name: "Bitcoin", ticker: "BTC", image: UIImage(named: "bitcoin")!),
-                      CurrencyModel(name: "Dogecoin", ticker: "DOGE", image: UIImage(named: "dogecoin")!),
-                      CurrencyModel(name: "Tether", ticker: "USDT", image: UIImage(named: "tether")!),
-                      CurrencyModel(name: "Apecoin", ticker: "APE", image: UIImage(named: "apecoin")!),
-                      CurrencyModel(name: "Solana", ticker: "SOL", image: UIImage(named: "solana")!),
-                      CurrencyModel(name: "Ethereum", ticker: "ETH", image: UIImage(named: "ethereum")!),
-                      CurrencyModel(name: "Cardano", ticker: "ADA", image: UIImage(named: "cardano")!),
-                      CurrencyModel(name: "Shiba Inu", ticker: "SHIB", image: UIImage(named: "shiba")!)
+    let currencies = [CurrencyModel(name: "Bitcoin", ticker: "BTC", imageName: "bitcoin"),
+                      CurrencyModel(name: "Dogecoin", ticker: "DOGE", imageName: "dogecoin"),
+                      CurrencyModel(name: "Tether", ticker: "USDT", imageName: "tether"),
+                      CurrencyModel(name: "Apecoin", ticker: "APE", imageName: "apecoin"),
+                      CurrencyModel(name: "Solana", ticker: "SOL", imageName: "solana"),
+                      CurrencyModel(name: "Ethereum", ticker: "ETH", imageName: "ethereum"),
+                      CurrencyModel(name: "Cardano", ticker: "ADA", imageName: "cardano"),
+                      CurrencyModel(name: "Shiba Inu", ticker: "SHIB", imageName: "shiba")
     ]
     
     // MARK: - UICollectionViewDataSource

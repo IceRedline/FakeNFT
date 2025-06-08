@@ -10,5 +10,5 @@ import UIKit
 struct CurrencyModel {
     let name: String
     let ticker: String
-    let image: UIImage
+    let imageName: String
 }
