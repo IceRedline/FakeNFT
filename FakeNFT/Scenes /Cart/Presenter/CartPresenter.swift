@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CartPresenter: NSObject, CartPresenterProtocol {
+final class CartPresenter: NSObject, CartPresenterProtocol {
     
     var view: CartViewControllerProtocol?
     
@@ -17,19 +17,14 @@ class CartPresenter: NSObject, CartPresenterProtocol {
         CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.78),
     ]
     
-    func viewDidLoad() {
-        
-    }
     // MARK: - UITableViewDataSource
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        nfts.count
-    }
-    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { nfts.count }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CartTableViewCell", for: indexPath) as? CartTableViewCell else {
-            fatalError("CartPresenter - cellForRowAt: Не удалось привести ячейку к CartTableViewCell")
+            assertionFailure("CartPresenter - cellForRowAt: Не удалось привести ячейку к CartTableViewCell")
+            return UITableViewCell()
         }
         
         cell.configure(nft: nfts[indexPath.row])

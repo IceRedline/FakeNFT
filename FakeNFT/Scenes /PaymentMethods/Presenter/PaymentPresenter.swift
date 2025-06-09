@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PaymentPresenter: NSObject, PaymentPresenterProtocol {
+final class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     
     var view: PaymentViewControllerProtocol?
     
@@ -23,9 +23,7 @@ class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     
     // MARK: - UICollectionViewDataSource
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        currencies.count
-    }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { currencies.count }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PaymentCollectionViewCell", for: indexPath) as? PaymentCollectionViewCell else {
@@ -41,8 +39,8 @@ class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell else { return }
-        cell.layer.borderColor = UIColor(named: "ypBlack")?.cgColor
-        cell.layer.cornerRadius = 12
+        cell.layer.borderColor = UIColor.ypBlack.cgColor
+        cell.layer.cornerRadius = Constants.corner12
         UIView.animate(withDuration: 0.2) {
             cell.layer.borderWidth = 1
         }
@@ -70,7 +68,7 @@ class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 42)
+        CGSize(width: collectionView.frame.width, height: 42)
     }
     
 }

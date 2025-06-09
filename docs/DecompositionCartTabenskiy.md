@@ -8,6 +8,10 @@
 
 Ссылка на доску: https://github.com/users/IceRedline/projects/1/views/1
 
+Выбранная архитектура: MVP
+
+Способ вёрстки: без Storyboard
+
 # Декомпозиция эпика Корзина
 
 ## Модуль 1:

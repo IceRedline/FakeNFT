@@ -10,5 +10,4 @@ import UIKit
 protocol CartPresenterProtocol: UITableViewDelegate, UITableViewDataSource {
     var view: CartViewControllerProtocol? { get set }
     
-    func viewDidLoad()
 }

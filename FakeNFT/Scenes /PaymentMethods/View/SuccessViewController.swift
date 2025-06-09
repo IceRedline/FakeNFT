@@ -21,7 +21,7 @@ class SuccessViewController: UIViewController {
         let label = UILabel()
         label.text = "Успех! Оплата прошла,\nпоздравляем с покупкой!"
         label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-        label.textColor = UIColor(named: "ypBlack") ?? .black
+        label.textColor = .ypBlack
         label.numberOfLines = 2
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -31,9 +31,9 @@ class SuccessViewController: UIViewController {
     private let returnButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Вернуться в каталог", for: .normal)
-        button.backgroundColor = UIColor(named: "ypBlack") ?? .black
+        button.backgroundColor = .ypBlack
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = Constants.corner16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +42,7 @@ class SuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "ypWhite")
+        view.backgroundColor = .ypWhite
         setupLayout()
     }
 

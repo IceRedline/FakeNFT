@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CartTableViewCell: UITableViewCell {
+final class CartTableViewCell: UITableViewCell {
     
     var nftImageView = UIImageView()
     var nftNameLabel = UILabel()
@@ -19,7 +19,6 @@ class CartTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        //currencyNameButton.addTarget(self, action: #selector(currencyNameButtonTapped(_:)), for: .touchUpInside)
         setupViews()
         setupConstraints()
     }
@@ -34,14 +33,14 @@ class CartTableViewCell: UITableViewCell {
             self.contentView.addSubview(view)
         }
         
-        nftImageView.layer.cornerRadius = 12
+        nftImageView.layer.cornerRadius = Constants.corner12
         nftNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        nftNameLabel.textColor = UIColor(named: "ypBlack")
+        nftNameLabel.textColor = .ypBlack
         priceLabel.text = "Цена"
         priceLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        priceLabel.textColor = UIColor(named: "ypBlack")
+        priceLabel.textColor = .ypBlack
         priceAmountLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        priceAmountLabel.textColor = UIColor(named: "ypBlack")
+        priceAmountLabel.textColor = .ypBlack
         deleteButton.setImage(UIImage(named: "deleteFromCart"), for: .normal)
     }
     
@@ -74,6 +73,6 @@ class CartTableViewCell: UITableViewCell {
     }
     
     @objc func currencyNameButtonTapped(_ sender: UIButton) {
-        
+        // TODO: -
     }
 }

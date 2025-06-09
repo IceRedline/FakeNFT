@@ -13,7 +13,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     let tableView = UITableView()
     
-    let sortButton: UIButton = {
+    private lazy var sortButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "sortButtonImage"), for: .normal)
         button.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
@@ -21,41 +21,41 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         return button
     }()
     
-    let bottomView: UIView = {
+    private lazy var bottomView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "ypLightGray")
-        view.layer.cornerRadius = 16
+        view.backgroundColor = .ypLightGray
+        view.layer.cornerRadius = Constants.corner16
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let nftCountLabel: UILabel = {
+    private lazy var nftCountLabel: UILabel = {
         let label = UILabel()
         label.text = "3 NFT"
-        label.textColor = UIColor(named: "ypBlack")
+        label.textColor = .ypBlack
         label.font = UIFont.systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let nftTotalPriceLabel: UILabel = {
+    private lazy var nftTotalPriceLabel: UILabel = {
         let label = UILabel()
         label.text = "5,34 ETH"
-        label.textColor = UIColor(named: "ypGreen")
+        label.textColor = .ypGreen
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let payButton: UIButton = {
+    private lazy var payButton: UIButton = {
         let button = UIButton()
         button.setTitle("К оплате", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        button.backgroundColor = UIColor(named: "ypBlack")
-        button.titleLabel?.textColor = UIColor(named: "ypWhite")
-        button.layer.cornerRadius = 16
+        button.backgroundColor = .ypBlack
+        button.titleLabel?.textColor = .ypWhite
+        button.layer.cornerRadius = Constants.corner16
         button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

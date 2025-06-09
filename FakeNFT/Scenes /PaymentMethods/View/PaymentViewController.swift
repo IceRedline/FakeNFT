@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
+final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     
     var presenter: PaymentPresenterProtocol?
     
@@ -67,9 +67,9 @@ class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     let payButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Оплатить", for: .normal)
-        button.setTitleColor(UIColor(named: "ypWhite"), for: .normal)
-        button.backgroundColor = UIColor(named: "ypBlack")
-        button.layer.cornerRadius = 16
+        button.setTitleColor(.ypWhite, for: .normal)
+        button.backgroundColor = .ypBlack
+        button.layer.cornerRadius = Constants.corner16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -90,7 +90,7 @@ class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     }
     
     private func setupViews() {
-        view.backgroundColor = UIColor(named: "ypWhite")
+        view.backgroundColor = .ypWhite
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsMultipleSelection = false
         

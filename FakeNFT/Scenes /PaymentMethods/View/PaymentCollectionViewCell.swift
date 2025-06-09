@@ -7,11 +7,11 @@
 
 import UIKit
 
-class PaymentCollectionViewCell: UICollectionViewCell {
+final class PaymentCollectionViewCell: UICollectionViewCell {
     
-    var currencyImageView = UIImageView()
-    var currencyNameLabel = UILabel()
-    var currencyTickerLabel = UILabel()
+    lazy var currencyImageView = UIImageView()
+    lazy var currencyNameLabel = UILabel()
+    lazy var currencyTickerLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,8 +25,8 @@ class PaymentCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        contentView.backgroundColor = UIColor(named: "ypLightGray")
-        contentView.layer.cornerRadius = 12
+        contentView.backgroundColor = .ypLightGray
+        contentView.layer.cornerRadius = Constants.corner12
         [currencyImageView, currencyNameLabel, currencyTickerLabel].forEach { view in
             view.translatesAutoresizingMaskIntoConstraints = false
             self.contentView.addSubview(view)
@@ -34,9 +34,9 @@ class PaymentCollectionViewCell: UICollectionViewCell {
         
         currencyImageView.layer.cornerRadius = 6
         currencyNameLabel.font = UIFont.systemFont(ofSize: 13)
-        currencyNameLabel.textColor = UIColor(named: "ypBlack")
+        currencyNameLabel.textColor = .ypBlack
         currencyTickerLabel.font = UIFont.systemFont(ofSize: 13)
-        currencyTickerLabel.textColor = UIColor(named: "ypGreen")
+        currencyTickerLabel.textColor = .ypGreen
     }
     
     private func setupConstraints() {
