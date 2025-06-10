@@ -13,22 +13,47 @@ final class TabBarController: UITabBarController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private let catalogTabBarItem = UITabBarItem(
-        title: NSLocalizedString("Tab.catalog", comment: ""),
-        image: UIImage(systemName: "square.stack.3d.up.fill"),
-        tag: 0
-    )
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
-        catalogController.tabBarItem = catalogTabBarItem
-
-        viewControllers = [catalogController]
-
+        setupTabs()
         view.backgroundColor = .systemBackground
+        UITabBar.appearance().unselectedItemTintColor = .black
+    }
+
+    private func setupTabs() {
+        let profileTab = createTab(
+            viewController: ProfileViewController(),
+            title: NSLocalizedString("Профиль", comment: ""),
+            imageName: "TabBarProfile"
+        )
+
+        let catalogTab = createTab(
+            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
+            title: NSLocalizedString("Каталог", comment: ""),
+            imageName: "Catalog"
+        )
+
+        let cartTab = createTab(
+            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
+            title: NSLocalizedString("Корзина", comment: ""),
+            imageName: "Cart"
+        )
+        let statisticTab = createTab(
+            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
+            title: NSLocalizedString("Статистика", comment: ""),
+            imageName: "Statistics"
+        )
+
+        viewControllers = [profileTab, catalogTab, cartTab, statisticTab]
+    }
+
+    private func createTab(viewController: UIViewController, title: String, imageName: String) -> UINavigationController {
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.tabBarItem = UITabBarItem(
+            title: title,
+            image: UIImage(named: imageName),
+            selectedImage: nil
+        )
+        return navController
     }
 }
