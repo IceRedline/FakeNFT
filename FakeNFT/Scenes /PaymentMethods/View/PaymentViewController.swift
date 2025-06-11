@@ -17,7 +17,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
 
-    let backButton: UIButton = {
+    lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "chevron.left")
         button.setImage(image, for: .normal)
@@ -55,16 +55,17 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return label
     }()
 
-    let userAgreementButton: UIButton = {
+    lazy var userAgreementButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Пользовательского соглашения", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.addTarget(self, action: #selector(useragreementButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
-    let payButton: UIButton = {
+    lazy var payButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Оплатить", for: .normal)
         button.setTitleColor(.ypWhite, for: .normal)
@@ -150,6 +151,11 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
     
     @objc private func backButtonTapped() {
         dismiss(animated: true)
+    }
+    
+    @objc private func useragreementButtonTapped() {
+        let webVC = WebViewController()
+        present(webVC, animated: true)
     }
     
     @objc private func payButtonTapped() {
