@@ -142,8 +142,18 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
+    
+    func presentDeleteVC(nftImage: UIImage) {
+        let deleteVC = DeleteViewController(nftImage: nftImage)
+        deleteVC.modalPresentationStyle = .overCurrentContext
+        deleteVC.modalTransitionStyle = .crossDissolve
+        present(deleteVC, animated: true)
+    }
 
 }
+
+
+
 
 #Preview(body: {
     let servicesAssembly = ServicesAssembly(

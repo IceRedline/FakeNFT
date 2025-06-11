@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CartPresenter: NSObject, CartPresenterProtocol {
+final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDelegate {
     
     var view: CartViewControllerProtocol?
     
@@ -26,10 +26,19 @@ final class CartPresenter: NSObject, CartPresenterProtocol {
             assertionFailure("CartPresenter - cellForRowAt: Не удалось привести ячейку к CartTableViewCell")
             return UITableViewCell()
         }
+        cell.delegate = self
         
         cell.configure(nft: nfts[indexPath.row])
         
         return cell
+    }
+    
+    // MARK: - CartTableViewCellDelegate
+    
+    func didTapDelete(for cell: CartTableViewCell) {
+        let nftName = cell.nftNameLabel.text
+        let nftImage = cell.nftImageView.image ?? UIImage()
+        view?.presentDeleteVC(nftImage: nftImage )
     }
     
 }

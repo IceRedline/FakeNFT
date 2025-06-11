@@ -9,6 +9,8 @@ import UIKit
 
 final class CartTableViewCell: UITableViewCell {
     
+    weak var delegate: CartTableViewCellDelegate?
+    
     var nftImageView = UIImageView()
     var nftNameLabel = UILabel()
     var starsImageView = UIImageView()
@@ -42,6 +44,7 @@ final class CartTableViewCell: UITableViewCell {
         priceAmountLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         priceAmountLabel.textColor = .ypBlack
         deleteButton.setImage(UIImage(named: "deleteFromCart"), for: .normal)
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -70,6 +73,10 @@ final class CartTableViewCell: UITableViewCell {
         let imageName = String(nft.rating) + "stars"
         starsImageView.image = UIImage(named: imageName)
         priceAmountLabel.text = "\(nft.price) ETH"
+    }
+    
+    @objc private func deleteButtonTapped() {
+        delegate?.didTapDelete(for: self)
     }
     
     @objc func currencyNameButtonTapped(_ sender: UIButton) {
