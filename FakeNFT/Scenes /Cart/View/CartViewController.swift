@@ -120,16 +120,16 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             preferredStyle: .actionSheet
         )
         
-        alert.addAction(UIAlertAction(title: "По цене", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: "price")
         })
         
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: "rating")
         })
         
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: "name")
         })
         
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))

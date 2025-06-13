@@ -12,10 +12,23 @@ final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDel
     var view: CartViewControllerProtocol?
     
     var nfts: [CartNFTModel] = [
-        CartNFTModel(image: UIImage(named: "testNFT1")!, name: "April", rating: 1, price: 1.78),
-        CartNFTModel(image: UIImage(named: "testNFT2")!, name: "Greena", rating: 3, price: 1.78),
-        CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.78),
+        CartNFTModel(image: UIImage(named: "testNFT1")!, name: "April", rating: 4, price: 1.78),
+        CartNFTModel(image: UIImage(named: "testNFT2")!, name: "Greena", rating: 3, price: 2.23),
+        CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.05),
     ]
+    
+    func sort(by parameter: String) {
+        switch parameter {
+        case "price":
+            nfts.sort(by: {$1.price > $0.price})
+        case "rating":
+            nfts.sort(by: {$1.rating > $0.rating})
+        case "name":
+            nfts.sort(by: {$1.name > $0.name})
+        default: return
+        }
+        view?.tableView.reloadData()
+    }
     
     // MARK: - UITableViewDataSource
     
