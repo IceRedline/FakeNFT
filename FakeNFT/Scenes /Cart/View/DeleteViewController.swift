@@ -9,6 +9,8 @@ import UIKit
 
 final class DeleteViewController: UIViewController {
     
+    var onDeleteConfirmed: (() -> Void)?
+    
     let nftImage: UIImage
     
     let nftImageView: UIImageView = {
@@ -60,7 +62,7 @@ final class DeleteViewController: UIViewController {
     }
     
     // MARK: - viewDidLoad
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBlur()
@@ -69,7 +71,7 @@ final class DeleteViewController: UIViewController {
     }
     
     // MARK: - Methods
-
+    
     private func setupBlur() {
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -83,7 +85,7 @@ final class DeleteViewController: UIViewController {
         hStackView.spacing = 8
         view.addSubview(hStackView)
     }
-
+    
     private func setupContent() {
         [nftImageView, questionLabel, deleteButton, returnButton].forEach { view in
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +98,7 @@ final class DeleteViewController: UIViewController {
         
         hStackView.addArrangedSubview(deleteButton)
         hStackView.addArrangedSubview(returnButton)
-
+        
         NSLayoutConstraint.activate([
             nftImageView.widthAnchor.constraint(equalToConstant: 108),
             nftImageView.heightAnchor.constraint(equalToConstant: 108),
@@ -115,11 +117,13 @@ final class DeleteViewController: UIViewController {
     }
     
     @objc private func deleteConfirmationTapped() {
-        
+        dismiss(animated: true) { [weak self] in
+            self?.onDeleteConfirmed?()
+        }
     }
     
     @objc private func returnButtonTapped() {
         dismiss(animated: true)
     }
-
+    
 }

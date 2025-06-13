@@ -11,7 +11,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     var presenter: CartPresenterProtocol?
     
-    let tableView = UITableView()
+    var tableView = UITableView()
     
     private lazy var sortButton: UIButton = {
         let button = UIButton()
@@ -143,8 +143,9 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         present(vc, animated: true)
     }
     
-    func presentDeleteVC(nftImage: UIImage) {
+    func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void) {
         let deleteVC = DeleteViewController(nftImage: nftImage)
+        deleteVC.onDeleteConfirmed = onConfirm
         deleteVC.modalPresentationStyle = .overCurrentContext
         deleteVC.modalTransitionStyle = .crossDissolve
         present(deleteVC, animated: true)

@@ -11,7 +11,7 @@ final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDel
     
     var view: CartViewControllerProtocol?
     
-    let nfts: [CartNFTModel] = [
+    var nfts: [CartNFTModel] = [
         CartNFTModel(image: UIImage(named: "testNFT1")!, name: "April", rating: 1, price: 1.78),
         CartNFTModel(image: UIImage(named: "testNFT2")!, name: "Greena", rating: 3, price: 1.78),
         CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.78),
@@ -33,12 +33,23 @@ final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDel
         return cell
     }
     
+    // MARK: - UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     // MARK: - CartTableViewCellDelegate
     
     func didTapDelete(for cell: CartTableViewCell) {
-        let nftName = cell.nftNameLabel.text
+        //let nftName = cell.nftNameLabel.text
         let nftImage = cell.nftImageView.image ?? UIImage()
-        view?.presentDeleteVC(nftImage: nftImage )
+        
+        view?.presentDeleteVC(nftImage: nftImage) { [weak self] in
+            
+            self?.nfts.removeAll(where: {$0.image == nftImage})
+            self?.view?.tableView.reloadData()
+        }
     }
     
 }

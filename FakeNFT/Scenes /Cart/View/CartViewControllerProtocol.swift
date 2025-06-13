@@ -9,6 +9,7 @@ import UIKit
 
 protocol CartViewControllerProtocol {
     var presenter: CartPresenterProtocol? { get }
+    var tableView: UITableView { get }
     
-    func presentDeleteVC(nftImage: UIImage)
+    func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void)
 }
