@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
+final class PaymentViewController: UIViewController, PaymentViewControllerProtocol, SuccessViewControllerDelegate {
     
     var presenter: PaymentPresenterProtocol?
     
@@ -149,6 +149,10 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         present(alert, animated: true)
     }
     
+    func dismissToCart() {
+        dismiss(animated: true)
+    }
+    
     @objc private func backButtonTapped() {
         dismiss(animated: true)
     }
@@ -159,7 +163,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
     }
     
     @objc private func payButtonTapped() {
-        let vc = SuccessViewController()
+        let vc = SuccessViewController(delegate: self)
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }

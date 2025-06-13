@@ -8,6 +8,8 @@
 import UIKit
 
 class SuccessViewController: UIViewController {
+    
+    var delegate: SuccessViewControllerDelegate
 
     private let successImageView: UIImageView = {
         let imageView = UIImageView()
@@ -28,7 +30,7 @@ class SuccessViewController: UIViewController {
         return label
     }()
 
-    private let returnButton: UIButton = {
+    private lazy var returnButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Вернуться в каталог", for: .normal)
         button.backgroundColor = .ypBlack
@@ -39,7 +41,16 @@ class SuccessViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
+    init(delegate: SuccessViewControllerDelegate) {
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
@@ -69,16 +80,18 @@ class SuccessViewController: UIViewController {
     }
     
     @objc private func backButtonTapped() {
-        let servicesAssembly = ServicesAssembly(networkClient: DefaultNetworkClient(),nftStorage: NftStorageImpl())
+        dismiss(animated: true)
+        delegate.dismissToCart()
+        /*let servicesAssembly = ServicesAssembly(networkClient: DefaultNetworkClient(),nftStorage: NftStorageImpl())
         let tabBar = TabBarController(servicesAssembly: servicesAssembly)
         tabBar.modalPresentationStyle = .fullScreen
         tabBar.modalTransitionStyle = .crossDissolve
         tabBar.selectedIndex = 1
-        present(tabBar, animated: true)
+        present(tabBar, animated: true)*/
     }
 
 }
 
 #Preview(traits: .defaultLayout, body: {
-    SuccessViewController()
+    SuccessViewController(delegate: PaymentViewController())
 })

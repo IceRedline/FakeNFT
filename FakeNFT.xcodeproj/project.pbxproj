@@ -59,6 +59,7 @@
 		994683542DF990C000F3B3A2 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994683532DF990C000F3B3A2 /* WebViewController.swift */; };
 		994683562DF999D400F3B3A2 /* DeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994683552DF999D400F3B3A2 /* DeleteViewController.swift */; };
 		994683612DF99B9500F3B3A2 /* CartTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994683602DF99B9500F3B3A2 /* CartTableViewCellDelegate.swift */; };
+		99BF1D472DFC555E00EEA7E3 /* SuccessViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BF1D462DFC555E00EEA7E3 /* SuccessViewControllerDelegate.swift */; };
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
@@ -137,6 +138,7 @@
 		994683552DF999D400F3B3A2 /* DeleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteViewController.swift; sourceTree = "<group>"; };
 		994683602DF99B9500F3B3A2 /* CartTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		999A57672DF57210009A2586 /* DecompositionCartTabenskiy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DecompositionCartTabenskiy.md; sourceTree = "<group>"; };
+		99BF1D462DFC555E00EEA7E3 /* SuccessViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewControllerDelegate.swift; sourceTree = "<group>"; };
 		E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E1CD40D92A96BE7D00BE7FE8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 				994683532DF990C000F3B3A2 /* WebViewController.swift */,
 				993825FA2DF41CCA009A844D /* PaymentViewControllerProtocol.swift */,
 				993826082DF448DC009A844D /* SuccessViewController.swift */,
+				99BF1D462DFC555E00EEA7E3 /* SuccessViewControllerDelegate.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -647,6 +650,7 @@
 				994683562DF999D400F3B3A2 /* DeleteViewController.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
 				558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */,
+				99BF1D472DFC555E00EEA7E3 /* SuccessViewControllerDelegate.swift in Sources */,
 				993825F12DF4162D009A844D /* PaymentViewController.swift in Sources */,
 				993825F92DF41CB9009A844D /* PaymentPresenterProtocol.swift in Sources */,
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
