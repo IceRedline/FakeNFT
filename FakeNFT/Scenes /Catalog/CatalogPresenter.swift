@@ -13,6 +13,8 @@ enum CatalogState {
 
 protocol CatalogPresenterProtocol {
     func viewDidLoad()
+    func sortCollectionsByName()
+    func sortCollectionsByNFTCount()
 }
 
 final class CatalogPresenter {
@@ -37,6 +39,14 @@ extension CatalogPresenter: CatalogPresenterProtocol {
     
     func viewDidLoad() {
         state = .loading
+    }
+    
+    func sortCollectionsByName() {
+        
+    }
+    
+    func sortCollectionsByNFTCount() {
+        
     }
     
 }

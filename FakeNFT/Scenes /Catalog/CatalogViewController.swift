@@ -22,6 +22,11 @@ final class CatalogViewController: UITableViewController {
     
     private var presenter: CatalogPresenterProtocol
     private var cellModels: [CollectionCellViewModel] = []
+    private lazy var sortActionSheet = UIAlertController(
+        title: nil,
+        message: "Сортировка",
+        preferredStyle: .actionSheet
+    )
     
     // MARK: - Init
 
@@ -90,7 +95,17 @@ private extension CatalogViewController {
 private extension CatalogViewController {
     
     func sortButtonDidTap() {
+        sortActionSheet.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
+            
+        })
         
+        sortActionSheet.addAction(UIAlertAction(title: "По количеству NFT", style: .default) { _ in
+            
+        })
+        
+        sortActionSheet.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
+        
+        present(sortActionSheet, animated: true)
     }
     
 }
