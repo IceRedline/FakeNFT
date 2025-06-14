@@ -7,7 +7,13 @@
 
 import UIKit
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, MyNFTControllerDelegate {
+    func myNFTController(_ controller: MyNFTController, didUpdateNFTCount count: Int) {
+        self.myNFT = Array(repeating: NFT(imageName: "NFT", name: "", rating: 0, creator: "", price: 0), count: count)
+        self.presenter = ProfilePresenter(view: self, nftCount: count)
+        self.presenter?.viewDidLoad()
+    }
+
 
     private let nameLabel = UILabel()
     private let descriptionLabel = UILabel()
@@ -15,6 +21,9 @@ final class ProfileViewController: UIViewController {
     private let tableView = UITableView()
     private var presenter: ProfilePresenter?
     private var nftCount: [(String, String?)] = []
+    let profileImage = UIImageView(image: UIImage(named: "profile"))
+    var myNFT: [NFT] = []
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +39,6 @@ final class ProfileViewController: UIViewController {
         editButton.tintColor = .black
         navigationItem.rightBarButtonItem = editButton
 
-        let profileImage = UIImageView(image: UIImage(named: "profile"))
         profileImage.layer.cornerRadius = 35
         profileImage.clipsToBounds = true
         profileImage.contentMode = .scaleAspectFill
@@ -87,7 +95,7 @@ final class ProfileViewController: UIViewController {
             tableView.heightAnchor.constraint(equalToConstant: 162)
         ])
 
-        presenter = ProfilePresenter(view: self)
+        presenter = ProfilePresenter(view: self, nftCount: myNFT.count)
         presenter?.viewDidLoad()
     }
 
@@ -112,10 +120,11 @@ final class ProfileViewController: UIViewController {
 }
 
 extension ProfileViewController: EditProfileDelegate {
-    func didUpdateProfile(name: String, description: String, email: String) {
+    func didUpdateProfile(name: String, description: String, email: String, image: UIImage?) {
         nameLabel.text = name
         descriptionLabel.text = description
         emailLabel.text = email
+        profileImage.image = image
     }
 }
 
@@ -124,6 +133,7 @@ extension ProfileViewController: ProfileProtocol {
         nameLabel.text = profile.name
         emailLabel.text = profile.email
         nftCount = profile.nftCount
+        profileImage.image = profile.image
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = 18
@@ -165,29 +175,34 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let myNFTController = MyNFTController()
+            let presenter = MyNFTPresenter(view: myNFTController)
+            myNFTController.inject(presenter: presenter)
+            myNFTController.delegate = self
+
             let back = UIBarButtonItem()
             back.title = ""
             navigationItem.backBarButtonItem = back
             navigationController?.navigationBar.tintColor = .black
-            let sortImage = UIImage(named: "Sort")
-            let sortButton = UIBarButtonItem(image: sortImage, style: .plain, target: myNFTController, action: #selector(MyNFTController.didTapSort))
-            myNFTController.navigationItem.rightBarButtonItem = sortButton
-            myNFTController.view.backgroundColor = .white
+
             myNFTController.title = "Мои NFT"
             myNFTController.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(myNFTController, animated: true)
+
         case 1:
             let favoriteNFTController = FavoriteNFTController()
             favoriteNFTController.view.backgroundColor = .white
             favoriteNFTController.title = "Избранные NFT"
             favoriteNFTController.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(favoriteNFTController, animated: true)
+
         case 2:
             if let url = URL(string: "https://joaquinphoenix.com") {
                 UIApplication.shared.open(url)
             }
+
         default:
             break
         }
     }
+
 }
