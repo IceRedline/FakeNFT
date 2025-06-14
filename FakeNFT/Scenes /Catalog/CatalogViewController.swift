@@ -14,9 +14,14 @@ final class CatalogViewController: UITableViewController {
         static let rowSpacing: CGFloat = 8
     }
     
-    // MARK: - Internal Properties
+    // MARK: - Subviews
     
-    lazy var activityIndicator = UIActivityIndicatorView()
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.style = .large
+        activityIndicator.color = .gray
+        return activityIndicator
+    }()
     
     // MARK: - Private Properties
     
@@ -68,6 +73,7 @@ private extension CatalogViewController {
     
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
+        tableView.backgroundView = activityIndicator
     }
     
     func setupNavigationBar() {

@@ -72,7 +72,10 @@ private extension CatalogPresenter {
     }
     
     func loadCollections() {
-        state = .data(Collection.mockData)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let self = self else { return }
+            self.state = .data(Collection.mockData)
+        }
     }
     
 }
