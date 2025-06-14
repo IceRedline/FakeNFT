@@ -9,9 +9,7 @@ final class CatalogViewController: UITableViewController {
     // MARK: - Constants
     
     private enum Constants {
-        static let horizontalInset: CGFloat = 16
         static let topInset: CGFloat = 20
-        static let bottomInset: CGFloat = 0
         static let rowHeight: CGFloat = 179
         static let rowSpacing: CGFloat = 8
     }
@@ -41,6 +39,7 @@ final class CatalogViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewController()
+        setupNavigationBar()
         setupTableView()
         presenter.viewDidLoad()
     }
@@ -66,10 +65,32 @@ private extension CatalogViewController {
         view.backgroundColor = UIColor(resource: .ypWhite)
     }
     
+    func setupNavigationBar() {
+        let sortButton = UIBarButtonItem(
+            image: UIImage(resource: .sort),
+            style: .plain,
+            target: self,
+            action: #selector(sortButtonDidTap)
+        )
+        navigationItem.rightBarButtonItem = sortButton
+    }
+    
     func setupTableView() {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
+        tableView.contentInset.top = Constants.topInset
         tableView.register(CollectionCell.self, forCellReuseIdentifier: CollectionCell.reuseIdentifier)
+    }
+    
+}
+
+// MARK: - Actions
+
+@objc
+private extension CatalogViewController {
+    
+    func sortButtonDidTap() {
+        
     }
     
 }

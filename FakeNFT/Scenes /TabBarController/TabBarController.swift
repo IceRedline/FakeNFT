@@ -24,10 +24,11 @@ final class TabBarController: UITabBarController {
 
         let catalogPresenter = CatalogPresenter()
         let catalogController = CatalogViewController(catalogPresenter)
+        let navController = UINavigationController(rootViewController: catalogController)
         catalogPresenter.view = catalogController
         catalogController.tabBarItem = catalogTabBarItem
 
-        viewControllers = [catalogController]
+        viewControllers = [navController]
 
         view.backgroundColor = UIColor(resource: .ypWhite)
     }
