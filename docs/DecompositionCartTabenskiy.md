@@ -6,7 +6,7 @@
 
 Эпик: Корзина
 
-Ссылка на доску: https://github.com/users/IceRedline/projects/1/views/1
+Ссылка на доску: https://github.com/users/IceRedline/projects/3
 
 Выбранная архитектура: MVP
 

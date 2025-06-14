@@ -5,29 +5,41 @@
 //  Created by Артем Табенский on 06.06.2025.
 //
 
+enum SortParameter: String {
+    case price
+    case rating
+    case name
+}
+
 import UIKit
 
-final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDelegate {
+final class CartPresenter: NSObject,
+                           CartPresenterProtocol,
+                           CartTableViewCellDelegate {
     
     var view: CartViewControllerProtocol?
     
-    var nfts: [CartNFTModel] = [
+    // Моковые данные, поэтому force unwrap, уберу на следующем этапе, когда будут сетевые запросы
+    private var nfts: [CartNFTModel] = [
         CartNFTModel(image: UIImage(named: "testNFT1")!, name: "April", rating: 4, price: 1.78),
         CartNFTModel(image: UIImage(named: "testNFT2")!, name: "Greena", rating: 3, price: 2.23),
         CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.05),
     ]
     
-    func sort(by parameter: String) {
+    func sort(by parameter: SortParameter) {
         switch parameter {
-        case "price":
+        case .price:
             nfts.sort(by: {$1.price > $0.price})
-        case "rating":
+        case .rating:
             nfts.sort(by: {$1.rating > $0.rating})
-        case "name":
+        case .name:
             nfts.sort(by: {$1.name > $0.name})
-        default: return
         }
         view?.tableView.reloadData()
+    }
+    
+    func checkCart() {
+        nfts.isEmpty ? view?.showEmptyLabel() : view?.hideEmptyLabel()
     }
     
     // MARK: - UITableViewDataSource
@@ -55,14 +67,13 @@ final class CartPresenter: NSObject, CartPresenterProtocol, CartTableViewCellDel
     // MARK: - CartTableViewCellDelegate
     
     func didTapDelete(for cell: CartTableViewCell) {
-        //let nftName = cell.nftNameLabel.text
         let nftImage = cell.nftImageView.image ?? UIImage()
         
         view?.presentDeleteVC(nftImage: nftImage) { [weak self] in
             
             self?.nfts.removeAll(where: {$0.image == nftImage})
             self?.view?.tableView.reloadData()
+            self?.checkCart()
         }
     }
-    
 }

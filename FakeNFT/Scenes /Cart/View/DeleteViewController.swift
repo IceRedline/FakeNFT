@@ -11,16 +11,16 @@ final class DeleteViewController: UIViewController {
     
     var onDeleteConfirmed: (() -> Void)?
     
-    let nftImage: UIImage
+    private let nftImage: UIImage
     
-    let nftImageView: UIImageView = {
+    private let nftImageView: UIImageView = {
         var imageView = UIImageView()
         return imageView
     }()
     
-    let questionLabel: UILabel = {
+    private let questionLabel: UILabel = {
         var label = UILabel()
-        label.text = "Вы уверены, что хотите удалить объект из корзины?"
+        label.text = Constants.deleteConfirmationText
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 13)
         label.numberOfLines = 2
@@ -28,7 +28,7 @@ final class DeleteViewController: UIViewController {
         return label
     }()
     
-    lazy var deleteButton: UIButton = {
+    private lazy var deleteButton: UIButton = {
         var button = UIButton()
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = Constants.corner12
@@ -38,7 +38,7 @@ final class DeleteViewController: UIViewController {
         return button
     }()
     
-    lazy var returnButton: UIButton = {
+    private lazy var returnButton: UIButton = {
         var button = UIButton()
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = Constants.corner12
@@ -79,16 +79,15 @@ final class DeleteViewController: UIViewController {
     }
     
     private func setupHStackView() {
-        hStackView.translatesAutoresizingMaskIntoConstraints = false
         hStackView.axis = .horizontal
         hStackView.distribution = .fillEqually
-        hStackView.spacing = 8
+        hStackView.spacing = Constants.stackSpacing
         view.addSubview(hStackView)
     }
     
     private func setupContent() {
-        [nftImageView, questionLabel, deleteButton, returnButton].forEach { view in
-            view.translatesAutoresizingMaskIntoConstraints = false
+        [nftImageView, questionLabel, deleteButton, returnButton, hStackView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         nftImageView.image = nftImage

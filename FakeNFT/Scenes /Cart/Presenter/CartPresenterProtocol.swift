@@ -10,5 +10,5 @@ import UIKit
 protocol CartPresenterProtocol: UITableViewDelegate, UITableViewDataSource {
     var view: CartViewControllerProtocol? { get set }
     
-    func sort(by parameter: String)
+    func sort(by parameter: SortParameter)
 }

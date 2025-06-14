@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SuccessViewController: UIViewController {
+final class SuccessViewController: UIViewController {
     
     var delegate: SuccessViewControllerDelegate
 
@@ -82,14 +82,7 @@ class SuccessViewController: UIViewController {
     @objc private func backButtonTapped() {
         dismiss(animated: true)
         delegate.dismissToCart()
-        /*let servicesAssembly = ServicesAssembly(networkClient: DefaultNetworkClient(),nftStorage: NftStorageImpl())
-        let tabBar = TabBarController(servicesAssembly: servicesAssembly)
-        tabBar.modalPresentationStyle = .fullScreen
-        tabBar.modalTransitionStyle = .crossDissolve
-        tabBar.selectedIndex = 1
-        present(tabBar, animated: true)*/
     }
-
 }
 
 #Preview(traits: .defaultLayout, body: {

@@ -12,15 +12,14 @@ final class WebViewController: UIViewController {
     
     var webView = WKWebView()
     var loadingProgressBar = UIProgressView()
-    lazy var backButton: UIButton = {
+    
+    private lazy var backButton: UIButton = {
         var button = UIButton()
         button.setTitle("< Вернуться", for: .normal)
         button.setTitleColor(.primary, for: .normal)
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    var url: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,9 +34,9 @@ final class WebViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .white
-        [webView, loadingProgressBar, backButton].forEach { view in
-            view.translatesAutoresizingMaskIntoConstraints = false
-            self.view.addSubview(view)
+        [webView, loadingProgressBar, backButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
         }
     }
     
@@ -88,13 +87,16 @@ final class WebViewController: UIViewController {
     
     private func updateProgress() {
         loadingProgressBar.progress = Float(webView.estimatedProgress)
-        loadingProgressBar.isHidden = fabs(webView.estimatedProgress - 1) <= 0.0001
+        loadingProgressBar.isHidden = fabs(webView.estimatedProgress - 1) <= Constants.progressBarMinimumDifference
     }
     
     // MARK: - URL Methods
     
     private func fetchURLRequest() {
-        let request = URLRequest(url: url ?? URL(string:"https://yandex.ru/legal/practicum_termsofuse/")!)
+        guard let url = URL(string:"https://yandex.ru/legal/practicum_termsofuse/") else {
+            return
+        }
+        let request = URLRequest(url: url)
         webView.load(request)
     }
 }

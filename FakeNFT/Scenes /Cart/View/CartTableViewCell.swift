@@ -30,9 +30,9 @@ final class CartTableViewCell: UITableViewCell {
     }
     
     private func setupViews() {
-        [nftImageView, nftNameLabel, starsImageView, priceLabel, priceAmountLabel, deleteButton].forEach { view in
-            view.translatesAutoresizingMaskIntoConstraints = false
-            self.contentView.addSubview(view)
+        [nftImageView, nftNameLabel, starsImageView, priceLabel, priceAmountLabel, deleteButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            self.contentView.addSubview($0)
         }
         
         nftImageView.layer.cornerRadius = Constants.corner12

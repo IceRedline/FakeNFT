@@ -27,9 +27,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     private func setupViews() {
         contentView.backgroundColor = .ypLightGray
         contentView.layer.cornerRadius = Constants.corner12
-        [currencyImageView, currencyNameLabel, currencyTickerLabel].forEach { view in
-            view.translatesAutoresizingMaskIntoConstraints = false
-            self.contentView.addSubview(view)
+        [currencyImageView, currencyNameLabel, currencyTickerLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            self.contentView.addSubview($0)
         }
         
         currencyImageView.layer.cornerRadius = 6
