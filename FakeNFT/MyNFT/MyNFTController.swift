@@ -13,7 +13,7 @@ protocol MyNFTControllerDelegate: AnyObject {
 
 final class MyNFTController: UIViewController {
     private let tableView = UITableView()
-    private var presenter: MyNFTPresenterProtocol!
+    private var presenter: MyNFTPresenterProtocol?
     private var nfts: [NFT] = []
     weak var delegate: MyNFTControllerDelegate?
     
@@ -22,6 +22,11 @@ final class MyNFTController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let presenter = presenter else {
+            assertionFailure("Presenter is missing")
+            return
+        }
         presenter.viewDidLoad()
         
         view.backgroundColor = .white
@@ -48,7 +53,12 @@ final class MyNFTController: UIViewController {
         ])
     }
     
-    @objc func didTapSort() {
+    @objc private func didTapSort() {
+        
+        guard let presenter = presenter else {
+            assertionFailure("Presenter is missing")
+            return
+        }
         presenter.didTapSort()
     }
 }
@@ -86,7 +96,12 @@ extension MyNFTController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let nft = nfts[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: MyNFTCell.reuseIdentifier, for: indexPath) as! MyNFTCell
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MyNFTCell.reuseIdentifier, for: indexPath) as? MyNFTCell else {
+            assertionFailure("Failed to get cell MyNFTCell")
+            return UITableViewCell()
+        }
+        
         cell.configure(with: nft)
         return cell
     }

@@ -46,6 +46,7 @@
 		557E672C2DFCADBB0015264F /* MyNFTPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557E672B2DFCADBB0015264F /* MyNFTPresenterProtocol.swift */; };
 		557E672E2DFCADD00015264F /* MyNFTPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557E672D2DFCADD00015264F /* MyNFTPresenter.swift */; };
 		557E67302DFCADF40015264F /* MyNFTCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557E672F2DFCADF40015264F /* MyNFTCell.swift */; };
+		557E67332DFF34290015264F /* UserDefaultsProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557E67322DFF34290015264F /* UserDefaultsProfileService.swift */; };
 		558DA28A2DF6C90600EA08E8 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DA2892DF6C90600EA08E8 /* ProfileModel.swift */; };
 		558DA28C2DF6C99200EA08E8 /* ProfileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DA28B2DF6C99200EA08E8 /* ProfileProtocol.swift */; };
 		558DA28E2DF6C9FF00EA08E8 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DA28D2DF6C9FF00EA08E8 /* ProfilePresenter.swift */; };
@@ -120,6 +121,7 @@
 		557E672B2DFCADBB0015264F /* MyNFTPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenterProtocol.swift; sourceTree = "<group>"; };
 		557E672D2DFCADD00015264F /* MyNFTPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenter.swift; sourceTree = "<group>"; };
 		557E672F2DFCADF40015264F /* MyNFTCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTCell.swift; sourceTree = "<group>"; };
+		557E67322DFF34290015264F /* UserDefaultsProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProfileService.swift; sourceTree = "<group>"; };
 		558DA2892DF6C90600EA08E8 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		558DA28B2DF6C99200EA08E8 /* ProfileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProtocol.swift; sourceTree = "<group>"; };
 		558DA28D2DF6C9FF00EA08E8 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				558DA2912DF6D53200EA08E8 /* EditProfileController.swift */,
 				558DA2932DF6D5A900EA08E8 /* EditProfileViewProtocol.swift */,
 				558DA2952DF6D5BF00EA08E8 /* EditProfilePresenter.swift */,
+				557E67322DFF34290015264F /* UserDefaultsProfileService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,
+				557E67332DFF34290015264F /* UserDefaultsProfileService.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
 				558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */,
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
