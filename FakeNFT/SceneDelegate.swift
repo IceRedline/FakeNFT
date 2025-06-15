@@ -10,7 +10,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
-
+        
+        configureNavigationBarAppearance()
+        configureTabBarAppearance()
+        
         let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
 
         let window = UIWindow(windowScene: windowScene)
@@ -18,4 +21,27 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         self.window = window
     }
+    
+    private func configureNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor(resource: .ypWhite)
+        UINavigationBar.appearance().tintColor = UIColor(resource: .ypBlack)
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
+    private func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = UIColor(resource: .ypWhite)
+        appearance.shadowColor = .clear
+
+        UITabBar.appearance().tintColor = UIColor(resource: .ypBlue)
+        UITabBar.appearance().unselectedItemTintColor = UIColor(resource: .ypBlack)
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
 }
