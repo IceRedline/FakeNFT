@@ -12,7 +12,7 @@ struct CollectionCellViewModel {
     let nftsCount: String
     let cover: UIImage
     
-    init(_ collection: Collection) {
+    init(_ collection: NftCollection) {
         self.name = collection.name
         self.nftsCount = String(collection.nfts.count)
         self.cover = collection.cover

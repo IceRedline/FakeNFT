@@ -8,7 +8,7 @@
 import Foundation
 
 enum CatalogState {
-    case initial, loading, failed(Error), data([Collection])
+    case initial, loading, failed(Error), data([NftCollection])
 }
 
 protocol CatalogPresenterProtocol {
@@ -73,8 +73,7 @@ private extension CatalogPresenter {
     
     func loadCollections() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            guard let self = self else { return }
-            self.state = .data(Collection.mockData)
+            self?.state = .data(NftCollection.mockData)
         }
     }
     
