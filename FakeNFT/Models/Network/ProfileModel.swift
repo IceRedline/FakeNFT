@@ -14,6 +14,3 @@ struct Profile {
     let nftCount: [(String, String?)]
     let image: UIImage?
 }
-
-
-

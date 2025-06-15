@@ -309,27 +309,27 @@ final class EditProfileController: UIViewController, UITextFieldDelegate, UIText
 extension EditProfileController: EditProfileViewProtocol {
     func changeImage(completion: @escaping (String?) -> Void) {
         let alert = UIAlertController(title: "Сменить фото", message: "Введите ссылку на изображение", preferredStyle: .alert)
-            alert.addTextField {
-                $0.placeholder = "Ссылка"
-                $0.keyboardType = .URL
-                $0.autocapitalizationType = .none
-            }
-
-            alert.addAction(UIAlertAction(title: "Отмена", style: .cancel) { _ in
-                completion(nil)
-            })
-            alert.addAction(UIAlertAction(title: "Ок", style: .default) { [weak alert] _ in
-                let urlString = alert?.textFields?.first?.text
-                completion(urlString)
-            })
-
-            present(alert, animated: true)
+        alert.addTextField {
+            $0.placeholder = "Ссылка"
+            $0.keyboardType = .URL
+            $0.autocapitalizationType = .none
         }
+        
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel) { _ in
+            completion(nil)
+        })
+        alert.addAction(UIAlertAction(title: "Ок", style: .default) { [weak alert] _ in
+            let urlString = alert?.textFields?.first?.text
+            completion(urlString)
+        })
+        
+        present(alert, animated: true)
+    }
     
     func showError() {
         let alert = UIAlertController(title: "Ошибка", message: "Не удалось загрузить изображение", preferredStyle: .alert)
-           alert.addAction(UIAlertAction(title: "Ок", style: .default))
-           present(alert, animated: true)
+        alert.addAction(UIAlertAction(title: "Ок", style: .default))
+        present(alert, animated: true)
     }
     
     func setProfileImage(_ image: UIImage) {
@@ -343,7 +343,7 @@ extension EditProfileController: EditProfileViewProtocol {
         emailField.text = email
         clearDescriptionButton.isHidden = true
     }
-
+    
     func closeWithResult(name: String, description: String, email: String) {
         delegate?.didUpdateProfile(
             name: name,
