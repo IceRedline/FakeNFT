@@ -1,5 +1,5 @@
 //
-//  CatalogPresenter.swift
+//  CollectionsPresenter.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 12.06.2025.
@@ -7,25 +7,25 @@
 
 import Foundation
 
-enum CatalogState {
+enum CollectionsState {
     case initial, loading, failed(Error), data([NftCollection])
 }
 
-protocol CatalogPresenterProtocol {
+protocol CollectionsPresenterProtocol {
     func viewDidLoad()
     func sortCollectionsByName()
     func sortCollectionsByNFTCount()
 }
 
-final class CatalogPresenter {
+final class CollectionsPresenter {
     
     // MARK: - Internal Properties
     
-    weak var view: CatalogView?
+    weak var view: CollectionsView?
     
     // MARK: - Private Properties
     
-    private var state: CatalogState = .initial {
+    private var state: CollectionsState = .initial {
         didSet {
             stateDidChange(state)
         }
@@ -33,9 +33,9 @@ final class CatalogPresenter {
     
 }
 
-// MARK: - CatalogPresenterProtocol
+// MARK: - CollectionsPresenterProtocol
 
-extension CatalogPresenter: CatalogPresenterProtocol {
+extension CollectionsPresenter: CollectionsPresenterProtocol {
     
     func viewDidLoad() {
         state = .loading
@@ -53,9 +53,9 @@ extension CatalogPresenter: CatalogPresenterProtocol {
 
 // MARK: - Private Methods
 
-private extension CatalogPresenter {
+private extension CollectionsPresenter {
     
-    func stateDidChange(_ state: CatalogState) {
+    func stateDidChange(_ state: CollectionsState) {
         switch state {
         case .initial:
             assertionFailure("initial state")

@@ -1,10 +1,10 @@
 import UIKit
 
-protocol CatalogView: AnyObject, LoadingView, ErrorView {
+protocol CollectionsView: AnyObject, LoadingView, ErrorView {
     func showCells(_ cellModels: [CollectionCellViewModel])
 }
 
-final class CatalogViewController: UITableViewController {
+final class CollectionsViewController: UITableViewController {
     
     // MARK: - Constants
     
@@ -25,12 +25,12 @@ final class CatalogViewController: UITableViewController {
     
     // MARK: - Private Properties
     
-    private var presenter: CatalogPresenterProtocol
+    private var presenter: CollectionsPresenterProtocol
     private var cellModels: [CollectionCellViewModel] = []
     
     // MARK: - Init
 
-    init(_ presenter: CatalogPresenterProtocol) {
+    init(_ presenter: CollectionsPresenterProtocol) {
         self.presenter = presenter
         super.init(style: .plain)
     }
@@ -51,9 +51,9 @@ final class CatalogViewController: UITableViewController {
 
 }
 
-// MARK: - CatalogView
+// MARK: - CollectionsView
 
-extension CatalogViewController: CatalogView {
+extension CollectionsViewController: CollectionsView {
     
     func showCells(_ cellModels: [CollectionCellViewModel]) {
         self.cellModels = cellModels
@@ -64,7 +64,7 @@ extension CatalogViewController: CatalogView {
 
 // MARK: - Private Methods
 
-private extension CatalogViewController {
+private extension CollectionsViewController {
     
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
@@ -93,7 +93,7 @@ private extension CatalogViewController {
 // MARK: - Actions
 
 @objc
-private extension CatalogViewController {
+private extension CollectionsViewController {
     
     func sortButtonDidTap() {
         let alert = UIAlertController(title: nil, message: "Сортировка", preferredStyle: .actionSheet)
@@ -107,7 +107,7 @@ private extension CatalogViewController {
 
 // MARK: - Data Source
 
-extension CatalogViewController {
+extension CollectionsViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cellModels.count
@@ -131,7 +131,7 @@ extension CatalogViewController {
 
 // MARK: - Delegate
 
-extension CatalogViewController {
+extension CollectionsViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         Constants.rowHeight
