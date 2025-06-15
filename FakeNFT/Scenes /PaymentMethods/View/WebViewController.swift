@@ -8,7 +8,11 @@
 import UIKit
 import WebKit
 
+
+
 final class WebViewController: UIViewController {
+    
+#warning("Ни у кого из партнёров по команде, и у меня на разных устройствах в том числе не получилось вызвать краш при откртыии WebView.")
     
     var webView = WKWebView()
     var loadingProgressBar = UIProgressView()
