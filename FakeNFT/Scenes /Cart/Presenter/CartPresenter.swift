@@ -19,11 +19,10 @@ final class CartPresenter: NSObject,
     
     var view: CartViewControllerProtocol?
     
-    // Моковые данные, поэтому force unwrap, уберу на следующем этапе, когда будут сетевые запросы
     private var nfts: [CartNFTModel] = [
-        CartNFTModel(image: UIImage(named: "testNFT1")!, name: "April", rating: 4, price: 1.78),
-        CartNFTModel(image: UIImage(named: "testNFT2")!, name: "Greena", rating: 3, price: 2.23),
-        CartNFTModel(image: UIImage(named: "testNFT3")!, name: "Spring", rating: 5, price: 1.05),
+        CartNFTModel(image: UIImage(named: "testNFT1") ?? UIImage(), name: "April", rating: 4, price: 1.78),
+        CartNFTModel(image: UIImage(named: "testNFT2") ?? UIImage(), name: "Greena", rating: 3, price: 2.23),
+        CartNFTModel(image: UIImage(named: "testNFT3") ?? UIImage(), name: "Spring", rating: 5, price: 1.05),
     ]
     
     func sort(by parameter: SortParameter) {
