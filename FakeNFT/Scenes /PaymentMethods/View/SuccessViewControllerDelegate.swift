@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol SuccessViewControllerDelegate {
+protocol SuccessViewControllerDelegate: AnyObject {
     func dismissToCart()
 }

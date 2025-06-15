@@ -9,7 +9,7 @@ import UIKit
 
 final class SuccessViewController: UIViewController {
     
-    var delegate: SuccessViewControllerDelegate
+    weak var delegate: SuccessViewControllerDelegate?
 
     private let successImageView: UIImageView = {
         let imageView = UIImageView()
@@ -81,7 +81,7 @@ final class SuccessViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         dismiss(animated: true)
-        delegate.dismissToCart()
+        delegate?.dismissToCart()
     }
 }
 
