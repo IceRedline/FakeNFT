@@ -7,17 +7,19 @@
 
 import UIKit
 
-final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
+final class PaymentViewController: UIViewController,
+                                   PaymentViewControllerProtocol,
+                                   SuccessViewControllerDelegate {
     
     var presenter: PaymentPresenterProtocol?
     
-    let collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
 
-    let backButton: UIButton = {
+    private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "chevron.left")
         button.setImage(image, for: .normal)
@@ -27,7 +29,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return button
     }()
 
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Выберите способ оплаты"
         label.font = UIFont.boldSystemFont(ofSize: 17)
@@ -36,7 +38,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return label
     }()
 
-    let bottomView: UIView = {
+    private let bottomView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         view.layer.cornerRadius = 20
@@ -44,7 +46,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return view
     }()
 
-    let textLabel: UILabel = {
+    private let textLabel: UILabel = {
         let label = UILabel()
         label.text = "Совершая покупку, вы соглашаетесь с условиями"
         label.textAlignment = .left
@@ -55,16 +57,17 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         return label
     }()
 
-    let userAgreementButton: UIButton = {
+    private lazy var userAgreementButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Пользовательского соглашения", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.addTarget(self, action: #selector(useragreementButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
-    let payButton: UIButton = {
+    private lazy var payButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Оплатить", for: .normal)
         button.setTitleColor(.ypWhite, for: .normal)
@@ -148,12 +151,21 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         present(alert, animated: true)
     }
     
+    func dismissToCart() {
+        dismiss(animated: true)
+    }
+    
     @objc private func backButtonTapped() {
         dismiss(animated: true)
     }
     
+    @objc private func useragreementButtonTapped() {
+        let webVC = WebViewController()
+        present(webVC, animated: true)
+    }
+    
     @objc private func payButtonTapped() {
-        let vc = SuccessViewController()
+        let vc = SuccessViewController(delegate: self)
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }

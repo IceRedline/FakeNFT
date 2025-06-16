@@ -5,8 +5,13 @@
 //  Created by Артем Табенский on 06.06.2025.
 //
 
-import Foundation
+import UIKit
 
 protocol CartViewControllerProtocol {
     var presenter: CartPresenterProtocol? { get }
+    var tableView: UITableView { get }
+    
+    func showEmptyLabel()
+    func hideEmptyLabel()
+    func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void)
 }

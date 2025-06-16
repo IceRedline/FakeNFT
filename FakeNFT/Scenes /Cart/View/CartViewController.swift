@@ -11,13 +11,12 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     var presenter: CartPresenterProtocol?
     
-    let tableView = UITableView()
+    var tableView = UITableView()
     
     private lazy var sortButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "sortButtonImage"), for: .normal)
         button.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -27,7 +26,6 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         view.layer.cornerRadius = Constants.corner16
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -60,6 +58,15 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    private lazy var emptyCartLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.emptyCartText
+        label.textColor = .ypBlack
+        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        label.isHidden = true
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,15 +82,15 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     }
     
     private func setupViews() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
+        [tableView, sortButton, bottomView, emptyCartLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
         
         tableView.register(CartTableViewCell.self, forCellReuseIdentifier: "CartTableViewCell")
         tableView.delegate = presenter
         tableView.dataSource = presenter
         
-        view.addSubview(sortButton)
-        view.addSubview(bottomView)
         bottomView.addSubview(nftCountLabel)
         bottomView.addSubview(nftTotalPriceLabel)
         bottomView.addSubview(payButton)
@@ -101,6 +108,8 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
+            emptyCartLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyCartLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             nftCountLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 16),
             nftCountLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 16),
@@ -113,6 +122,16 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         ])
     }
     
+    func showEmptyLabel() {
+        emptyCartLabel.isHidden = false
+        bottomView.isHidden = true
+    }
+    
+    func hideEmptyLabel() {
+        emptyCartLabel.isHidden = true
+        bottomView.isHidden = false
+    }
+    
     @objc private func sortButtonTapped() {
         let alert = UIAlertController(
             title: nil,
@@ -120,16 +139,16 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             preferredStyle: .actionSheet
         )
         
-        alert.addAction(UIAlertAction(title: "По цене", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: .price)
         })
         
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: .rating)
         })
         
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
-            
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter?.sort(by: .name)
         })
         
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
@@ -141,6 +160,14 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         let vc = PaymentViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
+    }
+    
+    func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void) {
+        let deleteVC = DeleteViewController(nftImage: nftImage)
+        deleteVC.onDeleteConfirmed = onConfirm
+        deleteVC.modalPresentationStyle = .overCurrentContext
+        deleteVC.modalTransitionStyle = .crossDissolve
+        present(deleteVC, animated: true)
     }
 
 }
