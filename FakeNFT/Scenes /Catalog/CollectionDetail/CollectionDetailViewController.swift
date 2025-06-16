@@ -20,10 +20,11 @@ final class CollectionDetailViewController: UIViewController {
         static let imageViewHeightMultiplier: CGFloat = 0.38
         static let horizontalInset: CGFloat = 16
         static let nameLabelTopOffset: CGFloat = 16
-        static let authorStackSpacing: CGFloat = 4
-        static let authorStackTopOffset: CGFloat = 8
+        static let authorInfoStackSpacing: CGFloat = 4
+        static let authorInfoStackTopOffset: CGFloat = 8
         static let collectionViewTopOffset: CGFloat = 24
         static let collectionViewBottomInset: CGFloat = -20
+        static let buttonHeight: CGFloat = 28
     }
     
     // MARK: - Subviews
@@ -52,18 +53,23 @@ final class CollectionDetailViewController: UIViewController {
         return label
     }()
     
-    private lazy var authorNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "John Doe"
-        label.font = .caption1
-        label.textColor = UIColor(resource: .ypBlue)
-        return label
+    private lazy var authorNameButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("John Doe", for: .normal)
+        button.setTitleColor(UIColor(resource: .ypBlue), for: .normal)
+        button.titleLabel?.font = .caption1
+        button.contentHorizontalAlignment = .leading
+        button.contentEdgeInsets = .zero
+        button.addTarget(self, action: #selector(authorNameButtonDidTap), for: .touchUpInside)
+        return button
     }()
     
-    private lazy var authorStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [authorLabel, authorNameLabel])
+    private lazy var authorInfoStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [authorLabel, authorNameButton])
         stackView.axis = .horizontal
-        stackView.spacing = Constants.authorStackSpacing
+        stackView.spacing = Constants.authorInfoStackSpacing
+        stackView.alignment = .center
+        stackView.distribution = .fill
         return stackView
     }()
     
@@ -110,7 +116,7 @@ private extension CollectionDetailViewController {
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         
-        [coverImageView, nameLabel, authorStackView, descriptionLabel/*, collectionView*/].forEach {
+        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel/*, collectionView*/].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -118,8 +124,8 @@ private extension CollectionDetailViewController {
         authorLabel.setContentHuggingPriority(.required, for: .horizontal)
         authorLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-        authorNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        authorNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        authorNameButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        authorNameButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
         NSLayoutConstraint.activate([
             coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -131,13 +137,14 @@ private extension CollectionDetailViewController {
             nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
             nameLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.nameLabelTopOffset),
             
-            authorStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
-            authorStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
-            authorStackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Constants.authorStackTopOffset),
+            authorNameButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeight),
+            
+            authorInfoStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
+            authorInfoStackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Constants.authorInfoStackTopOffset),
             
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
-            descriptionLabel.topAnchor.constraint(equalTo: authorStackView.bottomAnchor)//,
+            descriptionLabel.topAnchor.constraint(equalTo: authorInfoStackView.bottomAnchor)//,
             
 //            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
 //            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
@@ -188,6 +195,10 @@ private extension CollectionDetailViewController {
 private extension CollectionDetailViewController {
     
     func backButtonDidTap() {
+        
+    }
+    
+    func authorNameButtonDidTap() {
         
     }
     
