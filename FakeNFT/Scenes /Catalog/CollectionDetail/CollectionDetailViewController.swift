@@ -18,13 +18,20 @@ final class CollectionDetailViewController: UIViewController {
     private enum Constants {
         static let cornerRadius: CGFloat = 12
         static let imageViewHeightMultiplier: CGFloat = 0.38
+        
         static let horizontalInset: CGFloat = 16
+        
         static let nameLabelTopOffset: CGFloat = 16
+        
+        static let buttonHeight: CGFloat = 28
         static let authorInfoStackSpacing: CGFloat = 4
         static let authorInfoStackTopOffset: CGFloat = 8
+        
         static let collectionViewTopOffset: CGFloat = 24
         static let collectionViewBottomInset: CGFloat = -20
-        static let buttonHeight: CGFloat = 28
+        static let collectionViewMinimumInteritemSpacing: CGFloat = 10
+        static let collectionViewMinimumLineSpacing: CGFloat = 8
+        static let cellHeight: CGFloat = 192
     }
     
     // MARK: - Subviews
@@ -88,9 +95,24 @@ final class CollectionDetailViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
+        layout.sectionInset = .zero
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: Constants.horizontalInset, bottom: 0, right: Constants.horizontalInset)
+        collectionView.register(NftCell.self, forCellWithReuseIdentifier: NftCell.reuseIdentifier)
+        collectionView.backgroundColor = UIColor(resource: .ypWhite)
         return collectionView
     }()
+    
+    // MARK: - Private Properties
+    
+    private var cellModels: [NftCellViewModel] = [
+        NftCellViewModel(cover: UIImage(resource: .nft1), rating: 2, name: "Archie", price: "1 ETH", isFavorite: true, isInCart: false),
+        NftCellViewModel(cover: UIImage(resource: .nft2), rating: 5, name: "Ruby", price: "1 ETH", isFavorite: false, isInCart: true),
+        NftCellViewModel(cover: UIImage(resource: .nft3), rating: 4, name: "Nacho", price: "1 ETH", isFavorite: true, isInCart: false),
+        NftCellViewModel(cover: UIImage(resource: .nft4), rating: 3, name: "Biscuit", price: "1 ETH", isFavorite: false, isInCart: true)
+    ]
     
     // MARK: - Init
     
@@ -116,7 +138,7 @@ private extension CollectionDetailViewController {
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         
-        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel/*, collectionView*/].forEach {
+        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel, collectionView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -144,12 +166,12 @@ private extension CollectionDetailViewController {
             
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
-            descriptionLabel.topAnchor.constraint(equalTo: authorInfoStackView.bottomAnchor)//,
+            descriptionLabel.topAnchor.constraint(equalTo: authorInfoStackView.bottomAnchor),
             
-//            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInset),
-//            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInset),
-//            collectionView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Constants.collectionViewTopOffset),
-//            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset)
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Constants.collectionViewTopOffset),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset)
         ])
     }
     
@@ -200,6 +222,68 @@ private extension CollectionDetailViewController {
     
     func authorNameButtonDidTap() {
         
+    }
+    
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension CollectionDetailViewController: UICollectionViewDataSource {
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        cellModels.count
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: NftCell.reuseIdentifier,
+                for: indexPath
+            ) as? NftCell
+        else {
+            return UICollectionViewCell()
+        }
+        
+        cell.configure(with: cellModels[indexPath.row])
+        return cell
+    }
+    
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension CollectionDetailViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let availableWidth = collectionView.bounds.width - Constants.horizontalInset * 2 - Constants.collectionViewMinimumInteritemSpacing * 2
+        let cellWidth = availableWidth / 3
+        return CGSize(width: cellWidth, height: Constants.cellHeight)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        Constants.collectionViewMinimumInteritemSpacing
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        Constants.collectionViewMinimumLineSpacing
     }
     
 }
