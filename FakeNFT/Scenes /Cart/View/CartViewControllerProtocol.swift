@@ -11,6 +11,7 @@ protocol CartViewControllerProtocol {
     var presenter: CartPresenterProtocol? { get }
     var tableView: UITableView { get }
     
+    func updateLabels(nftCount: Int, totalPrice: Double)
     func showEmptyLabel()
     func hideEmptyLabel()
     func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void)

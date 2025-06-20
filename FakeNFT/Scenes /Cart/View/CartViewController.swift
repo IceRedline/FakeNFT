@@ -74,6 +74,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         setup(presenter: CartPresenter())
         setupViews()
         setupConstraints()
+        presenter?.viewDidLoad()
     }
     
     private func setup(presenter: CartPresenterProtocol) {
@@ -120,6 +121,11 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             payButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -16),
             payButton.leadingAnchor.constraint(equalTo: nftTotalPriceLabel.trailingAnchor, constant: 16)
         ])
+    }
+    
+    func updateLabels(nftCount: Int, totalPrice: Double) {
+        nftCountLabel.text = "\(nftCount) NFT"
+        nftTotalPriceLabel.text = "\(totalPrice) ETH"
     }
     
     func showEmptyLabel() {

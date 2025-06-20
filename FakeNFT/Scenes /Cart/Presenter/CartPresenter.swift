@@ -25,6 +25,10 @@ final class CartPresenter: NSObject,
         CartNFTModel(image: UIImage(named: "testNFT3") ?? UIImage(), name: "Spring", rating: 5, price: 1.05),
     ]
     
+    func viewDidLoad() {
+        updateLabelsNumbers()
+    }
+    
     func sort(by parameter: SortParameter) {
         switch parameter {
         case .price:
@@ -35,6 +39,12 @@ final class CartPresenter: NSObject,
             nfts.sort(by: {$1.name > $0.name})
         }
         view?.tableView.reloadData()
+    }
+    
+    func updateLabelsNumbers() {
+        let count = nfts.count
+        let totalPrice: Double = nfts.reduce(0.0) { $0 + $1.price }
+        self.view?.updateLabels(nftCount: count, totalPrice: totalPrice)
     }
     
     func checkCart() {
@@ -72,6 +82,7 @@ final class CartPresenter: NSObject,
             
             self?.nfts.removeAll(where: {$0.image == nftImage})
             self?.view?.tableView.reloadData()
+            self?.updateLabelsNumbers()
             self?.checkCart()
         }
     }
