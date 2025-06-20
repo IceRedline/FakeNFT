@@ -10,15 +10,11 @@ import UIKit
 final class ProfilePresenter {
     weak var view: ProfileProtocol?
     
-    private let nftCount: Int
-    
-    init(view: ProfileProtocol, nftCount: Int) {
+    init(view: ProfileProtocol) {
         self.view = view
-        self.nftCount = nftCount
     }
     
     func viewDidLoad() {
-        
         let savedData = UserDefaults.standard.dictionary(forKey: "userProfileData")
         
         let name = savedData?["name"] as? String ?? "Joaquin Phoenix"
@@ -39,14 +35,37 @@ final class ProfilePresenter {
             ]
             UserDefaults.standard.set(defaultData, forKey: "userProfileData")
         }
+
+        let placeholderProfile = ProfileModel(
+            name: "Загрузка...",
+            description: "",
+            email: "",
+            nftCount: [
+                ("Мои NFT", nil),
+                ("Избранные NFT", nil),
+                ("О разработчике", nil)
+            ],
+            image: profileImage
+        )
+        view?.setupProfile(placeholderProfile)
+
+        if MyNFTStorage.shared.nfts.isEmpty || FavoritesStorage.shared.favorites.isEmpty {
+            NFTBootstrapLoader.shared.preloadAll { [weak self] in
+                self?.viewDidLoad()
+            }
+            return
+        }
         
-        let profile = Profile(
+        let myNFTCount = MyNFTStorage.shared.nfts.count
+        let favoriteCount = FavoritesStorage.shared.favorites.count
+        
+        let profile = ProfileModel(
             name: name,
             description: description,
             email: email,
             nftCount: [
-                ("Мои NFT", "\(nftCount)"),
-                ("Избранные NFT", "11"),
+                ("Мои NFT", "\(myNFTCount)"),
+                ("Избранные NFT", "\(favoriteCount)"),
                 ("О разработчике", nil)
             ],
             image: profileImage

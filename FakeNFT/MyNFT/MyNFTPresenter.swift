@@ -15,16 +15,17 @@ enum SortOption {
 
 final class MyNFTPresenter: MyNFTPresenterProtocol {
     private weak var view: MyNFTViewProtocol?
-    private var nfts: [NFT] = [
-        NFT(imageName: "NFT", name: "Lilo", rating: 3, creator: "John Doe", price: 1.78)
-    ]
+    private var nfts: [NFTModel] = []
     
     init(view: MyNFTViewProtocol) {
         self.view = view
     }
     
     func viewDidLoad() {
-        view?.setupNFT(nfts)
+        NFTService.shared.fetchMyNFTsFromOrders { [weak self] nfts in
+            self?.nfts = nfts
+            self?.view?.setupNFT(nfts)
+        }
     }
     
     func didTapSort() {

@@ -86,13 +86,30 @@ final class MyNFTCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with nft: NFT) {
-        nftImage.image = UIImage(named: nft.imageName)
+    func configure(with nft: NFTModel) {
+        loadImage(from: nft.imageName)
         nameLabel.text = nft.name
         creatorPrefixLabel.text = "от"
         creatorNameLabel.text = nft.creator
         priceValueLabel.text = String(format: "%.2f ETH", nft.price)
         updateStars(rating: nft.rating)
+    }
+    
+    private func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else {
+            nftImage.image = UIImage(systemName: "photo") // заглушка
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let self = self,
+                  let data = data,
+                  let image = UIImage(data: data) else { return }
+            
+            DispatchQueue.main.async {
+                self.nftImage.image = image
+            }
+        }.resume()
     }
     
     private func updateStars(rating: Int) {
@@ -101,9 +118,10 @@ final class MyNFTCell: UITableViewCell {
         for i in 1...5 {
             let starImage = UIImage(systemName: i <= rating ? "star.fill" : "star")
             let imageView = UIImageView(image: starImage)
-            imageView.tintColor = .systemYellow
-            imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
+            imageView.tintColor = UIColor(named: "yellowUniversal")
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
             stars.addArrangedSubview(imageView)
         }
     }
