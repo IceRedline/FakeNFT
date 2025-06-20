@@ -23,7 +23,8 @@ final class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     func loadCurrencies() {
         UIBlockingProgressHUD.show()
         
-        client.send(request: CurrenciesRequest(), type: [CurrencyModel].self) { result in
+        client.send(request: CurrenciesRequest(), type: [CurrencyModel].self) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let currencies):
                 print("Полученные валюты: \(currencies)")
@@ -33,6 +34,7 @@ final class PaymentPresenter: NSObject, PaymentPresenterProtocol {
                 
             case .failure(let error):
                 print("Ошибка при загрузке валют: \(error.localizedDescription)")
+                UIBlockingProgressHUD.dismiss()
             }
         }
         
