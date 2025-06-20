@@ -6,20 +6,37 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class PaymentPresenter: NSObject, PaymentPresenterProtocol {
     
     var view: PaymentViewControllerProtocol?
     
-    let currencies = [CurrencyModel(name: "Bitcoin", ticker: "BTC", imageName: "bitcoin"),
-                      CurrencyModel(name: "Dogecoin", ticker: "DOGE", imageName: "dogecoin"),
-                      CurrencyModel(name: "Tether", ticker: "USDT", imageName: "tether"),
-                      CurrencyModel(name: "Apecoin", ticker: "APE", imageName: "apecoin"),
-                      CurrencyModel(name: "Solana", ticker: "SOL", imageName: "solana"),
-                      CurrencyModel(name: "Ethereum", ticker: "ETH", imageName: "ethereum"),
-                      CurrencyModel(name: "Cardano", ticker: "ADA", imageName: "cardano"),
-                      CurrencyModel(name: "Shiba Inu", ticker: "SHIB", imageName: "shiba")
-    ]
+    let client = DefaultNetworkClient()
+    
+    var currencies: [CurrencyModel] = []
+    
+    func viewDidLoad() {
+        loadCurrencies()
+    }
+    
+    func loadCurrencies() {
+        UIBlockingProgressHUD.show()
+        
+        client.send(request: CurrenciesRequest(), type: [CurrencyModel].self) { result in
+            switch result {
+            case .success(let currencies):
+                print("Полученные валюты: \(currencies)")
+                self.currencies = currencies
+                self.view?.collectionView.reloadData()
+                UIBlockingProgressHUD.dismiss()
+                
+            case .failure(let error):
+                print("Ошибка при загрузке валют: \(error.localizedDescription)")
+            }
+        }
+        
+    }
     
     // MARK: - UICollectionViewDataSource
     

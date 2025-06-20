@@ -13,7 +13,7 @@ final class PaymentViewController: UIViewController,
     
     var presenter: PaymentPresenterProtocol?
     
-    private let collectionView: UICollectionView = {
+    var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -85,6 +85,8 @@ final class PaymentViewController: UIViewController,
         setup(presenter: PaymentPresenter())
         setupViews()
         setupConstraints()
+        
+        presenter?.viewDidLoad()
     }
     
     private func setup(presenter: PaymentPresenterProtocol) {

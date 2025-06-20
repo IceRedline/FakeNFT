@@ -9,4 +9,6 @@ import UIKit
 
 protocol PaymentPresenterProtocol: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     var view: PaymentViewControllerProtocol? { get set }
+    
+    func viewDidLoad()
 }
