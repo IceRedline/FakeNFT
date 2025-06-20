@@ -162,10 +162,14 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         present(alert, animated: true)
     }
     
-    @objc private func payButtonTapped() {
-        let vc = PaymentViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+    @objc func payButtonTapped() {
+        let paymentVC = PaymentViewController()
+        paymentVC.modalPresentationStyle = .fullScreen
+        paymentVC.onSuccess = { [weak self] in
+            self?.presenter?.clearCart()
+        }
+
+        present(paymentVC, animated: true)
     }
     
     func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void) {

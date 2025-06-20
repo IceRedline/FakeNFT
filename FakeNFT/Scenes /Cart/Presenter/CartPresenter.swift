@@ -51,6 +51,13 @@ final class CartPresenter: NSObject,
         nfts.isEmpty ? view?.showEmptyLabel() : view?.hideEmptyLabel()
     }
     
+    func clearCart() {
+        nfts.removeAll()
+        view?.tableView.reloadData()
+        view?.updateLabels(nftCount: 0, totalPrice: 0)
+        checkCart()
+    }
+    
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { nfts.count }

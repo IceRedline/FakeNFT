@@ -12,4 +12,5 @@ protocol CartPresenterProtocol: UITableViewDelegate, UITableViewDataSource {
     
     func viewDidLoad()
     func sort(by parameter: SortParameter)
+    func clearCart()
 }
