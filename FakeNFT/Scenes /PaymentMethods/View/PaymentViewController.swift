@@ -1,10 +1,3 @@
-//
-//  PaymentViewController.swift
-//  FakeNFT
-//
-//  Created by Артем Табенский on 07.06.2025.
-//
-
 import UIKit
 
 final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
@@ -73,6 +66,8 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
         button.layer.cornerRadius = Constants.corner16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
+        button.alpha = 0.5
+        button.isEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -136,6 +131,13 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
             payButton.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor, constant: -12),
             payButton.heightAnchor.constraint(equalToConstant: 60)
         ])
+    }
+    
+    func enablePayButton() {
+        UIView.animate(animations: {
+            payButton.alpha = 1
+        })
+        payButton.isEnabled = true
     }
     
     func showPaymentError() {

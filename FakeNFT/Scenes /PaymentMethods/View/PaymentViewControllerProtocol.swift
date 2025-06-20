@@ -12,5 +12,6 @@ protocol PaymentViewControllerProtocol {
     
     var collectionView: UICollectionView { get }
     
+    func enablePayButton()
     func showPaymentError()
 }

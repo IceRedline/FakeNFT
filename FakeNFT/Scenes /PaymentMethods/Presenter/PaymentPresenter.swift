@@ -61,6 +61,8 @@ final class PaymentPresenter: NSObject, PaymentPresenterProtocol {
         UIView.animate(withDuration: 0.2) {
             cell.layer.borderWidth = 1
         }
+        
+        view?.enablePayButton()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
