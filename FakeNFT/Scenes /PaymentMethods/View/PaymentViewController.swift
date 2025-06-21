@@ -1,24 +1,15 @@
-//
-//  PaymentViewController.swift
-//  FakeNFT
-//
-//  Created by Артем Табенский on 07.06.2025.
-//
-
 import UIKit
 
-final class PaymentViewController: UIViewController,
-                                   PaymentViewControllerProtocol,
-                                   SuccessViewControllerDelegate {
+final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     
     var presenter: PaymentPresenterProtocol?
     
-    private let collectionView: UICollectionView = {
+    var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
-
+    
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "chevron.left")
@@ -28,7 +19,7 @@ final class PaymentViewController: UIViewController,
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Выберите способ оплаты"
@@ -37,7 +28,7 @@ final class PaymentViewController: UIViewController,
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private let bottomView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -45,7 +36,7 @@ final class PaymentViewController: UIViewController,
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     private let textLabel: UILabel = {
         let label = UILabel()
         label.text = "Совершая покупку, вы соглашаетесь с условиями"
@@ -56,7 +47,7 @@ final class PaymentViewController: UIViewController,
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private lazy var userAgreementButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Пользовательского соглашения", for: .normal)
@@ -66,7 +57,7 @@ final class PaymentViewController: UIViewController,
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
     private lazy var payButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Оплатить", for: .normal)
@@ -75,16 +66,22 @@ final class PaymentViewController: UIViewController,
         button.layer.cornerRadius = Constants.corner16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
+        button.alpha = 0.5
+        button.isEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
+    var onSuccess: (() -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setup(presenter: PaymentPresenter())
         setupViews()
         setupConstraints()
+        
+        presenter?.viewDidLoad()
     }
     
     private func setup(presenter: PaymentPresenterProtocol) {
@@ -104,36 +101,43 @@ final class PaymentViewController: UIViewController,
         [backButton, titleLabel, collectionView, bottomView].forEach { view.addSubview($0) }
         [textLabel, userAgreementButton, payButton].forEach { bottomView.addSubview($0) }
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 9),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-
+            
             titleLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
+            
             collectionView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 16),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-
+            
             bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: 186),
-
+            
             textLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 18),
             textLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 16),
-
+            
             userAgreementButton.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 4),
             userAgreementButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 16),
-
+            
             payButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 16),
             payButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -16),
             payButton.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor, constant: -12),
             payButton.heightAnchor.constraint(equalToConstant: 60)
         ])
+    }
+    
+    func enablePayButton() {
+        UIView.animate(animations: {
+            payButton.alpha = 1
+        })
+        payButton.isEnabled = true
     }
     
     func showPaymentError() {
@@ -165,9 +169,10 @@ final class PaymentViewController: UIViewController,
     }
     
     @objc private func payButtonTapped() {
-        let vc = SuccessViewController(delegate: self)
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+        let successVC = SuccessViewController()
+        successVC.modalPresentationStyle = .fullScreen
+        successVC.onSuccess = onSuccess
+        present(successVC, animated: true)
     }
 }
 

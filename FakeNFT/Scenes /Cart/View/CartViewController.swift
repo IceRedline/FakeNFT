@@ -74,6 +74,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         setup(presenter: CartPresenter())
         setupViews()
         setupConstraints()
+        presenter?.viewDidLoad()
     }
     
     private func setup(presenter: CartPresenterProtocol) {
@@ -122,6 +123,11 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         ])
     }
     
+    func updateLabels(nftCount: Int, totalPrice: Double) {
+        nftCountLabel.text = "\(nftCount) NFT"
+        nftTotalPriceLabel.text = "\(totalPrice) ETH"
+    }
+    
     func showEmptyLabel() {
         emptyCartLabel.isHidden = false
         bottomView.isHidden = true
@@ -157,9 +163,14 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     }
     
     @objc private func payButtonTapped() {
-        let vc = PaymentViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+        let paymentVC = PaymentViewController()
+        paymentVC.modalPresentationStyle = .fullScreen
+        paymentVC.onSuccess = { [weak self] in
+            guard let self else { return }
+            self.presenter?.clearCart()
+        }
+
+        present(paymentVC, animated: true)
     }
     
     func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void) {

@@ -53,10 +53,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(currency: CurrencyModel) {
-        guard let image = UIImage(named: currency.imageName) else { return }
-        currencyImageView.image = image
-        currencyNameLabel.text = currency.name
-        currencyTickerLabel.text = currency.ticker
+        currencyImageView.kf.setImage(with: URL(string: currency.image))
+        currencyNameLabel.text = currency.title
+        currencyTickerLabel.text = currency.name
     }
     
 }

@@ -9,8 +9,6 @@ import UIKit
 
 final class SuccessViewController: UIViewController {
     
-    weak var delegate: SuccessViewControllerDelegate?
-
     private let successImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "successImage")
@@ -18,7 +16,7 @@ final class SuccessViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-
+    
     private let successLabel: UILabel = {
         let label = UILabel()
         label.text = "Успех! Оплата прошла,\nпоздравляем с покупкой!"
@@ -29,7 +27,7 @@ final class SuccessViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private lazy var returnButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Вернуться в каталог", for: .normal)
@@ -42,21 +40,14 @@ final class SuccessViewController: UIViewController {
         return button
     }()
     
-    init(delegate: SuccessViewControllerDelegate) {
-        self.delegate = delegate
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var onSuccess: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         setupLayout()
     }
-
+    
     private func setupLayout() {
         view.addSubview(successImageView)
         view.addSubview(successLabel)
@@ -80,11 +71,11 @@ final class SuccessViewController: UIViewController {
     }
     
     @objc private func backButtonTapped() {
-        dismiss(animated: true)
-        delegate?.dismissToCart()
+        onSuccess?()
+        self.presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 }
 
 #Preview(traits: .defaultLayout, body: {
-    SuccessViewController(delegate: PaymentViewController())
+    SuccessViewController()
 })

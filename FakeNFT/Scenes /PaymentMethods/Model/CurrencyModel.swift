@@ -7,8 +7,8 @@
 
 import UIKit
 
-struct CurrencyModel {
+struct CurrencyModel: Decodable {
+    let title: String
     let name: String
-    let ticker: String
-    let imageName: String
+    let image: String
 }
