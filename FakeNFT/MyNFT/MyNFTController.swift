@@ -11,17 +11,6 @@ protocol MyNFTControllerDelegate: AnyObject {
     func myNFTController(_ controller: MyNFTController, didUpdateNFTCount count: Int)
 }
 
-private let emptyLabel: UILabel = {
-    let label = UILabel()
-    label.text = "У Вас ещё нет NFT"
-    label.textAlignment = .center
-    label.textColor = .black
-    label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.isHidden = true
-    return label
-}()
-
 final class MyNFTController: UIViewController {
     private let tableView = UITableView()
     private var presenter: MyNFTPresenterProtocol?
@@ -36,6 +25,17 @@ final class MyNFTController: UIViewController {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.hidesWhenStopped = true
         return indicator
+    }()
+    
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "У Вас ещё нет NFT"
+        label.textAlignment = .center
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
     }()
     
     override func viewDidLoad() {
@@ -96,7 +96,7 @@ final class MyNFTController: UIViewController {
 extension MyNFTController: MyNFTViewProtocol {
     func setupNFT(_ nfts: [NFTModel]) {
         self.nfts = nfts
-        MyNFTStorage.shared.nfts = nfts
+        MyNFTStorage.shared.update(nfts)
         tableView.reloadData()
         
         let isEmpty = nfts.isEmpty

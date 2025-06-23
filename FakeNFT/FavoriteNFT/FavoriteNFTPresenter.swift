@@ -29,7 +29,7 @@ final class FavoriteNFTPresenter {
                 )
             }
             
-            FavoritesStorage.shared.favorites = self.items
+            FavoritesStorage.shared.update(items)
             
             DispatchQueue.main.async {
                 if self.items.isEmpty {
@@ -57,11 +57,9 @@ final class FavoriteNFTPresenter {
     func removeItem(at index: Int) {
         guard index < items.count else { return }
         items.remove(at: index)
-        FavoritesStorage.shared.favorites = items
+        FavoritesStorage.shared.update(items)
         
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
+        DispatchQueue.main.async {
             self.view?.updateCollection()
             self.view?.notifyFavoriteCountChanged(self.items.count)
             
@@ -71,6 +69,5 @@ final class FavoriteNFTPresenter {
             }
         }
     }
-    
 }
 

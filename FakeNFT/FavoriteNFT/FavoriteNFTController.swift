@@ -43,13 +43,13 @@ final class FavoriteNFTController: UIViewController, FavoriteNFTProtocol {
     }()
     
     override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .white
-            setupCollectionView()
-            setupActivityIndicator()
-            activityIndicator.startAnimating()
-            presenter.viewDidLoad()
-        }
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        setupCollectionView()
+        setupActivityIndicator()
+        activityIndicator.startAnimating()
+        presenter.viewDidLoad()
+    }
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
@@ -117,15 +117,12 @@ extension FavoriteNFTController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoriteNFTCell.identifier, for: indexPath) as? FavoriteNFTCell else {
+        guard indexPath.item < presenter.numberOfItems(),
+              let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoriteNFTCell.identifier, for: indexPath) as? FavoriteNFTCell else {
             return UICollectionViewCell()
         }
         
-        guard indexPath.item < presenter.numberOfItems() else {
-            return UICollectionViewCell()
-        }
         let item = presenter.item(at: indexPath.item)
-        
         cell.configure(with: item)
         
         cell.onLikeTapped = { [weak self, weak cell] in

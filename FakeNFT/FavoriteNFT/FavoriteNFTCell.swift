@@ -13,8 +13,8 @@ final class FavoriteNFTCell: UICollectionViewCell {
     private let nftImage = UIImageView()
     private let nameLabel = UILabel()
     private let priceLabel = UILabel()
-    private let starsCount = UIStackView()
     private let likeButton = UIButton()
+    private let stars = UIStackView()
     
     var onLikeTapped: (() -> Void)?
     
@@ -38,7 +38,7 @@ final class FavoriteNFTCell: UICollectionViewCell {
         contentView.addSubview(nftImage)
         
         likeButton.translatesAutoresizingMaskIntoConstraints = false
-        likeButton.setImage(UIImage(named: "like"), for: .normal)
+        likeButton.setImage(UIImage(resource: .like), for: .normal)
         likeButton.imageView?.contentMode = .scaleAspectFit
         contentView.addSubview(likeButton)
         likeButton.addTarget(self, action: #selector(likeTapped), for: .touchUpInside)
@@ -53,10 +53,10 @@ final class FavoriteNFTCell: UICollectionViewCell {
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(priceLabel)
         
-        starsCount.axis = .horizontal
-        starsCount.spacing = 2
-        starsCount.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(starsCount)
+        stars.axis = .horizontal
+        stars.spacing = 2
+        stars.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stars)
         
         NSLayoutConstraint.activate([
             nftImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -72,10 +72,10 @@ final class FavoriteNFTCell: UICollectionViewCell {
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
             nameLabel.leadingAnchor.constraint(equalTo:  nftImage.trailingAnchor, constant: 12),
             
-            starsCount.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
-            starsCount.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            stars.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
+            stars.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
-            priceLabel.topAnchor.constraint(equalTo: starsCount.bottomAnchor, constant: 8),
+            priceLabel.topAnchor.constraint(equalTo: stars.bottomAnchor, constant: 8),
             priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor)
         ])
     }
@@ -85,41 +85,18 @@ final class FavoriteNFTCell: UICollectionViewCell {
     }
     
     func configure(with item: FavoriteNFTModel) {
-        loadImage(from: item.imageURL)
         nameLabel.text = item.name
         priceLabel.text = item.price
         updateStars(rating: item.rating)
-    }
-    
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else {
-            nftImage.image = UIImage(systemName: "photo")
-            return
-        }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            guard let self = self,
-                  let data = data,
-                  let image = UIImage(data: data) else { return }
-            
-            DispatchQueue.main.async {
-                self.nftImage.image = image
-            }
-        }.resume()
+        ImageLoader.shared.loadImage(from: item.imageURL) { [weak self] image in
+            self?.nftImage.image = image ?? UIImage(systemName: "photo")
+        }
     }
-    
     
     private func updateStars(rating: Int) {
-        starsCount.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        for i in 1...5 {
-            let imageName = i <= rating ? "star.fill" : "star"
-            let imageView = UIImageView(image: UIImage(systemName: imageName))
-            imageView.tintColor = UIColor(named: "yellowUniversal")
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
-            starsCount.addArrangedSubview(imageView)
-        }
+        stars.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        let views = StarRating.makeStars(rating: rating)
+        views.forEach { stars.addArrangedSubview($0) }
     }
 }

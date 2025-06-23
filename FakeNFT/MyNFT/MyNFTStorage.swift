@@ -9,7 +9,10 @@ import Foundation
 
 final class MyNFTStorage {
     static let shared = MyNFTStorage()
-    var nfts: [NFTModel] = []
+    
+    private init() {}
+    
+    private(set) var nfts: [NFTModel] = []
     
     func update(_ nfts: [NFTModel]) {
         self.nfts = nfts

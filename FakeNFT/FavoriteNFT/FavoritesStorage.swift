@@ -9,7 +9,10 @@ import Foundation
 
 final class FavoritesStorage {
     static let shared = FavoritesStorage()
-    var favorites: [FavoriteNFTModel] = []
+    
+    private init() {}
+    
+    private(set) var favorites: [FavoriteNFTModel] = []
     
     func update(_ favorites: [FavoriteNFTModel]) {
         self.favorites = favorites

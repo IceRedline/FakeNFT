@@ -15,14 +15,11 @@ final class NFTService {
     private let token = "d8d620c3-90df-46d8-bea8-694c831cf0b3"
     private let baseURL = "https://d5dn3j2ouj72b0ejucbl.apigw.yandexcloud.net/api/v1"
     
-    private func makeRequest(url: URL) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.setValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
-        return request
-    }
-    
     func fetchNFTIDsFromProfile(completion: @escaping ([String]) -> Void) {
-        guard let url = URL(string: "\(baseURL)/profile/1") else { completion([]); return }
+        guard let url = URL(string: "\(baseURL)/profile/1") else {
+            completion([])
+            return
+        }
         let request = makeRequest(url: url)
         
         URLSession.shared.dataTask(with: request) { data, _, _ in
@@ -37,18 +34,26 @@ final class NFTService {
         }.resume()
     }
     
-    
     func fetchNFT(by id: String, completion: @escaping (NFTModel?) -> Void) {
-        guard let url = URL(string: "\(baseURL)/nft/\(id)") else { completion(nil); return }
+        guard let url = URL(string: "\(baseURL)/nft/\(id)") else {
+            completion(nil)
+            return
+        }
         let request = makeRequest(url: url)
         
         URLSession.shared.dataTask(with: request) { data, _, _ in
-            guard let data else { completion(nil); return }
+            guard let data else {
+                completion(nil)
+                return
+            }
             do {
                 let decoded = try JSONDecoder().decode(NFTResponse.self, from: data)
+                let imageUrl = decoded.images.first?.absoluteString ?? ""
+                let extractedName = self.extractNameFromURL(imageUrl) ?? decoded.name
+                
                 let model = NFTModel(
-                    imageName: decoded.images.first?.absoluteString ?? "",
-                    name: decoded.name,
+                    imageName: imageUrl,
+                    name: extractedName,
                     rating: decoded.rating,
                     creator: decoded.author,
                     price: decoded.price
@@ -78,9 +83,11 @@ final class NFTService {
             completion(result)
         }
     }
+    
     func fetchFavoriteNFTs(completion: @escaping ([NFTModel]) -> Void) {
         guard let url = URL(string: "\(baseURL)/profile/1") else {
-            completion([]); return
+            completion([])
+            return
         }
         let request = makeRequest(url: url)
         
@@ -112,7 +119,10 @@ final class NFTService {
     }
     
     func fetchMyNFTsFromOrders(completion: @escaping ([NFTModel]) -> Void) {
-        guard let url = URL(string: "\(baseURL)/orders/1") else { completion([]); return }
+        guard let url = URL(string: "\(baseURL)/orders/1") else {
+            completion([])
+            return
+        }
         let request = makeRequest(url: url)
         
         URLSession.shared.dataTask(with: request) { data, _, _ in
@@ -125,5 +135,19 @@ final class NFTService {
             self.fetchNFTs(for: ids, completion: completion)
         }.resume()
     }
+    
+    private func makeRequest(url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+        return request
+    }
+    
+    private func extractNameFromURL(_ urlString: String) -> String? {
+        guard let url = URL(string: urlString) else { return nil }
+        let components = url.pathComponents
+        if let nftIndex = components.firstIndex(of: "NFT"), nftIndex + 1 < components.count {
+            return components[nftIndex + 1]
+        }
+        return nil
+    }
 }
-

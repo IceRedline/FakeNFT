@@ -35,7 +35,7 @@ final class ProfilePresenter {
             ]
             UserDefaults.standard.set(defaultData, forKey: "userProfileData")
         }
-
+        
         let placeholderProfile = ProfileModel(
             name: "Загрузка...",
             description: "",
@@ -48,7 +48,7 @@ final class ProfilePresenter {
             image: profileImage
         )
         view?.setupProfile(placeholderProfile)
-
+        
         if MyNFTStorage.shared.nfts.isEmpty || FavoritesStorage.shared.favorites.isEmpty {
             NFTBootstrapLoader.shared.preloadAll { [weak self] in
                 self?.viewDidLoad()

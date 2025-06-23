@@ -87,7 +87,9 @@ final class MyNFTCell: UITableViewCell {
     }
     
     func configure(with nft: NFTModel) {
-        loadImage(from: nft.imageName)
+        ImageLoader.shared.loadImage(from: nft.imageName) { [weak self] image in
+            self?.nftImage.image = image ?? UIImage(systemName: "photo")
+        }
         nameLabel.text = nft.name
         creatorPrefixLabel.text = "от"
         creatorNameLabel.text = nft.creator
@@ -95,35 +97,9 @@ final class MyNFTCell: UITableViewCell {
         updateStars(rating: nft.rating)
     }
     
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else {
-            nftImage.image = UIImage(systemName: "photo") // заглушка
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            guard let self = self,
-                  let data = data,
-                  let image = UIImage(data: data) else { return }
-            
-            DispatchQueue.main.async {
-                self.nftImage.image = image
-            }
-        }.resume()
-    }
-    
     private func updateStars(rating: Int) {
         stars.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        for i in 1...5 {
-            let starImage = UIImage(systemName: i <= rating ? "star.fill" : "star")
-            let imageView = UIImageView(image: starImage)
-            imageView.tintColor = UIColor(named: "yellowUniversal")
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
-            stars.addArrangedSubview(imageView)
-        }
+        let views = StarRating.makeStars(rating: rating)
+        views.forEach { stars.addArrangedSubview($0) }
     }
 }
-
