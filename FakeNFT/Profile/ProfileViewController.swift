@@ -9,11 +9,10 @@ import UIKit
 
 final class ProfileViewController: UIViewController, MyNFTControllerDelegate {
     func myNFTController(_ controller: MyNFTController, didUpdateNFTCount count: Int) {
-        self.myNFT = Array(repeating: NFT(imageName: "NFT", name: "", rating: 0, creator: "", price: 0), count: count)
-        self.presenter = ProfilePresenter(view: self, nftCount: count)
+        self.myNFT = Array(repeating: NFTModel(imageName: "NFT", name: "", rating: 0, creator: "", price: 0), count: count)
+        self.presenter = ProfilePresenter(view: self/*, myNFTCount: count, favoriteCount: favoriteNFT.count*/)
         self.presenter?.viewDidLoad()
     }
-    
     
     private let nameLabel = UILabel()
     private let descriptionLabel = UILabel()
@@ -22,8 +21,8 @@ final class ProfileViewController: UIViewController, MyNFTControllerDelegate {
     private var presenter: ProfilePresenter?
     private var nftCount: [(String, String?)] = []
     let profileImage = UIImageView(image: UIImage(named: "profile"))
-    var myNFT: [NFT] = []
-    
+    var myNFT: [NFTModel] = []
+    var favoriteNFT: [FavoriteNFTModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +37,11 @@ final class ProfileViewController: UIViewController, MyNFTControllerDelegate {
         )
         editButton.tintColor = .black
         navigationItem.rightBarButtonItem = editButton
+        
+        let back = UIBarButtonItem()
+        back.title = ""
+        navigationItem.backBarButtonItem = back
+        navigationController?.navigationBar.tintColor = .black
         
         profileImage.layer.cornerRadius = 35
         profileImage.clipsToBounds = true
@@ -95,7 +99,9 @@ final class ProfileViewController: UIViewController, MyNFTControllerDelegate {
             tableView.heightAnchor.constraint(equalToConstant: 162)
         ])
         
-        presenter = ProfilePresenter(view: self, nftCount: myNFT.count)
+        presenter = ProfilePresenter(
+            view: self
+        )
         presenter?.viewDidLoad()
     }
     
@@ -129,7 +135,7 @@ extension ProfileViewController: EditProfileDelegate {
 }
 
 extension ProfileViewController: ProfileProtocol {
-    func setupProfile(_ profile: Profile) {
+    func setupProfile(_ profile: ProfileModel) {
         nameLabel.text = profile.name
         emailLabel.text = profile.email
         nftCount = profile.nftCount
@@ -179,19 +185,14 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             myNFTController.inject(presenter: presenter)
             myNFTController.delegate = self
             
-            let back = UIBarButtonItem()
-            back.title = ""
-            navigationItem.backBarButtonItem = back
-            navigationController?.navigationBar.tintColor = .black
-            
             myNFTController.title = "Мои NFT"
             myNFTController.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(myNFTController, animated: true)
             
         case 1:
             let favoriteNFTController = FavoriteNFTController()
-            favoriteNFTController.view.backgroundColor = .white
             favoriteNFTController.title = "Избранные NFT"
+            favoriteNFTController.delegate = self
             favoriteNFTController.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(favoriteNFTController, animated: true)
             
@@ -204,5 +205,17 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             break
         }
     }
-    
 }
+
+extension ProfileViewController: FavoriteNFTControllerDelegate {
+    func favoriteNFTController(_ controller: FavoriteNFTController, didUpdateFavoriteCount count: Int) {
+        
+        self.favoriteNFT = Array(repeating: FavoriteNFTModel(imageURL: "", name: "", rating: 0, price: ""), count: count)
+        
+        self.presenter = ProfilePresenter(
+            view: self
+        )
+        self.presenter?.viewDidLoad()
+    }
+}
+

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ProfileProtocol: AnyObject {
-    func setupProfile(_ profile: Profile)
+    func setupProfile(_ profile: ProfileModel)
 }

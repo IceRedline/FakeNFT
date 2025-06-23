@@ -8,6 +8,6 @@
 import Foundation
 
 protocol MyNFTViewProtocol: AnyObject {
-    func setupNFT(_ nfts: [NFT])
+    func setupNFT(_ nfts: [NFTModel])
     func showSortOptions()
 }

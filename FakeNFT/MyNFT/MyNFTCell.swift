@@ -86,8 +86,10 @@ final class MyNFTCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with nft: NFT) {
-        nftImage.image = UIImage(named: nft.imageName)
+    func configure(with nft: NFTModel) {
+        ImageLoader.shared.loadImage(from: nft.imageName) { [weak self] image in
+            self?.nftImage.image = image ?? UIImage(systemName: "photo")
+        }
         nameLabel.text = nft.name
         creatorPrefixLabel.text = "от"
         creatorNameLabel.text = nft.creator
@@ -97,15 +99,7 @@ final class MyNFTCell: UITableViewCell {
     
     private func updateStars(rating: Int) {
         stars.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        for i in 1...5 {
-            let starImage = UIImage(systemName: i <= rating ? "star.fill" : "star")
-            let imageView = UIImageView(image: starImage)
-            imageView.tintColor = .systemYellow
-            imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
-            stars.addArrangedSubview(imageView)
-        }
+        let views = StarRating.makeStars(rating: rating)
+        views.forEach { stars.addArrangedSubview($0) }
     }
 }
-
