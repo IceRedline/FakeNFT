@@ -184,7 +184,7 @@ private extension CollectionDetailViewController {
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         
-        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel, collectionView, activityIndicator].forEach {
+        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel, collectionView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -217,10 +217,7 @@ private extension CollectionDetailViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Constants.collectionViewTopOffset),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset)
         ])
     }
     
