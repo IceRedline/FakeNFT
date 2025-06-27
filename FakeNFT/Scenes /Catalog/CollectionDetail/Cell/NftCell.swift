@@ -58,6 +58,7 @@ final class NftCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(resource: .likeOff), for: .normal)
         button.setImage(UIImage(resource: .likeOn), for: .selected)
+        button.addTarget(self, action: #selector(favoriteButtonDidTap), for: .touchUpInside)
         return button
     }()
     
@@ -66,6 +67,7 @@ final class NftCell: UICollectionViewCell {
         button.tintColor = UIColor(resource: .ypBlack)
         button.setImage(UIImage(resource: .cartAdd), for: .normal)
         button.setImage(UIImage(resource: .cartDelete), for: .selected)
+        button.addTarget(self, action: #selector(cartButtonDidTap), for: .touchUpInside)
         return button
     }()
     
@@ -138,6 +140,21 @@ private extension NftCell {
             cartButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize),
             cartButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize),
         ])
+    }
+    
+}
+
+// MARK: - Actions
+
+@objc
+private extension NftCell {
+    
+    func favoriteButtonDidTap() {
+        favoriteButton.isSelected.toggle()
+    }
+    
+    func cartButtonDidTap() {
+        cartButton.isSelected.toggle()
     }
     
 }
