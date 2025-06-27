@@ -7,8 +7,29 @@
 
 import UIKit
 
-protocol CollectionDetailView: AnyObject {
+struct CollectionDetailViewModel {
+    let cover: UIImage
+    let name: String
+    let author: String
+    let description: String
+    let nfts: [NftCellViewModel]
     
+    init(_ collection: NftCollection) {
+        self.cover = collection.cover
+        self.name = collection.name
+        self.author = collection.author
+        self.description = collection.description
+        self.nfts = [
+            NftCellViewModel(cover: UIImage(resource: .nft1), rating: 2, name: "Archie", price: "1 ETH", isFavorite: true, isInCart: false),
+            NftCellViewModel(cover: UIImage(resource: .nft2), rating: 5, name: "Ruby", price: "1 ETH", isFavorite: false, isInCart: true),
+            NftCellViewModel(cover: UIImage(resource: .nft3), rating: 4, name: "Nacho", price: "1 ETH", isFavorite: true, isInCart: false),
+            NftCellViewModel(cover: UIImage(resource: .nft4), rating: 3, name: "Biscuit", price: "1 ETH", isFavorite: false, isInCart: true)
+        ]
+    }
+}
+
+protocol CollectionDetailView: AnyObject, LoadingView, ErrorView {
+    func displayDetails(_ viewModel: CollectionDetailViewModel)
 }
 
 final class CollectionDetailViewController: UIViewController {
@@ -36,9 +57,15 @@ final class CollectionDetailViewController: UIViewController {
     
     // MARK: - Subviews
     
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.style = .large
+        activityIndicator.color = .gray
+        return activityIndicator
+    }()
+    
     private lazy var coverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(resource: .collection6)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -46,7 +73,6 @@ final class CollectionDetailViewController: UIViewController {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Peach"
         label.font = .headline3
         label.textColor = UIColor(resource: .ypBlack)
         return label
@@ -62,7 +88,6 @@ final class CollectionDetailViewController: UIViewController {
     
     private lazy var authorNameButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("John Doe", for: .normal)
         button.setTitleColor(UIColor(resource: .ypBlue), for: .normal)
         button.titleLabel?.font = .caption1
         button.contentHorizontalAlignment = .leading
@@ -82,7 +107,6 @@ final class CollectionDetailViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей."
         label.font = .caption2
         label.textColor = UIColor(resource: .ypBlack)
         label.numberOfLines = .max
@@ -107,14 +131,19 @@ final class CollectionDetailViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private var cellModels: [NftCellViewModel] = [
-        NftCellViewModel(cover: UIImage(resource: .nft1), rating: 2, name: "Archie", price: "1 ETH", isFavorite: true, isInCart: false),
-        NftCellViewModel(cover: UIImage(resource: .nft2), rating: 5, name: "Ruby", price: "1 ETH", isFavorite: false, isInCart: true),
-        NftCellViewModel(cover: UIImage(resource: .nft3), rating: 4, name: "Nacho", price: "1 ETH", isFavorite: true, isInCart: false),
-        NftCellViewModel(cover: UIImage(resource: .nft4), rating: 3, name: "Biscuit", price: "1 ETH", isFavorite: false, isInCart: true)
-    ]
+    private let presenter: CollectionDetailPresenterProtocol
+    private var cellModels: [NftCellViewModel] = []
     
     // MARK: - Init
+    
+    init(_ presenter: CollectionDetailPresenterProtocol) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecycle
 
@@ -122,11 +151,28 @@ final class CollectionDetailViewController: UIViewController {
         super.viewDidLoad()
         setupViewController()
         setupNavigationBar()
+        presenter.viewDidLoad()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         applyBottomCornersRadius()
+    }
+    
+}
+
+// MARK: - CollectionDetailView
+
+extension CollectionDetailViewController: CollectionDetailView {
+    
+    func displayDetails(_ viewModel: CollectionDetailViewModel) {
+        coverImageView.image = viewModel.cover
+        nameLabel.text = viewModel.name
+        authorNameButton.setTitle(viewModel.author, for: .normal)
+        descriptionLabel.text = viewModel.description
+        cellModels = viewModel.nfts
+    
+        collectionView.reloadData()
     }
     
 }
@@ -138,7 +184,7 @@ private extension CollectionDetailViewController {
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         
-        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel, collectionView].forEach {
+        [coverImageView, nameLabel, authorInfoStackView, descriptionLabel, collectionView, activityIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -171,7 +217,10 @@ private extension CollectionDetailViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Constants.collectionViewTopOffset),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Constants.collectionViewBottomInset),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     

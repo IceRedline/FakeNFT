@@ -9,12 +9,12 @@ import UIKit
 
 struct CollectionCellViewModel {
     let name: String
-    let nftsCount: String
+    let nftCount: String
     let cover: UIImage
     
-    init(_ collection: NftCollection) {
+    init(_ collection: NftCollectionSummary) {
         self.name = collection.name
-        self.nftsCount = String(collection.nfts.count)
+        self.nftCount = String(collection.nftCount)
         self.cover = collection.cover
     }
 }
@@ -70,7 +70,7 @@ extension CollectionCell {
     
     func configure(with viewModel: CollectionCellViewModel) {
         coverImageView.image = viewModel.cover
-        nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftsCount))"
+        nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftCount))"
     }
     
 }

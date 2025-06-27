@@ -1,7 +1,7 @@
 import UIKit
 
 protocol CollectionsView: AnyObject, LoadingView, ErrorView {
-    func showCells(_ cellModels: [CollectionCellViewModel])
+    func displayCells(_ cellModels: [CollectionCellViewModel])
 }
 
 final class CollectionsViewController: UITableViewController {
@@ -32,7 +32,7 @@ final class CollectionsViewController: UITableViewController {
 
     init(_ presenter: CollectionsPresenterProtocol) {
         self.presenter = presenter
-        super.init(style: .plain)
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -55,7 +55,7 @@ final class CollectionsViewController: UITableViewController {
 
 extension CollectionsViewController: CollectionsView {
     
-    func showCells(_ cellModels: [CollectionCellViewModel]) {
+    func displayCells(_ cellModels: [CollectionCellViewModel]) {
         self.cellModels = cellModels
         tableView.reloadData()
     }

@@ -8,7 +8,7 @@
 import Foundation
 
 enum CollectionsState {
-    case initial, loading, failed(Error), data([NftCollection])
+    case initial, loading, failed(Error), data([NftCollectionSummary])
 }
 
 protocol CollectionsPresenterProtocol {
@@ -67,13 +67,13 @@ private extension CollectionsPresenter {
             // TODO: show error
         case .data(let collections):
             view?.hideLoading()
-            view?.showCells(collections.map { CollectionCellViewModel($0) })
+            view?.displayCells(collections.map { CollectionCellViewModel($0) })
         }
     }
     
     func loadCollections() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.state = .data(NftCollection.mockData)
+            self?.state = .data(NftCollectionSummary.mockData)
         }
     }
     
