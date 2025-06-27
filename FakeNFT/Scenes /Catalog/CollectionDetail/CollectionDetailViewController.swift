@@ -30,6 +30,7 @@ struct CollectionDetailViewModel {
 
 protocol CollectionDetailView: AnyObject, LoadingView, ErrorView {
     func displayDetails(_ viewModel: CollectionDetailViewModel)
+    func navigateToAuthorWebViewController()
 }
 
 final class CollectionDetailViewController: UIViewController {
@@ -175,6 +176,15 @@ extension CollectionDetailViewController: CollectionDetailView {
         collectionView.reloadData()
     }
     
+    func navigateToAuthorWebViewController() {
+        let requestBuilder = DefaultAuthorWebRequestBuilder()
+        let presenter = AuthorWebPresenter(requestBuilder: requestBuilder)
+        let viewController = AuthorWebViewController(presenter: presenter)
+        presenter.view = viewController
+        
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
 }
 
 // MARK: - Private Methods
@@ -267,7 +277,7 @@ private extension CollectionDetailViewController {
     }
     
     func authorNameButtonDidTap() {
-        
+        presenter.didTapAuthorButton()
     }
     
 }

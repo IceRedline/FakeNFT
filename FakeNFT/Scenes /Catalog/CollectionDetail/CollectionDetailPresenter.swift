@@ -17,6 +17,7 @@ struct CollectionDetailInput {
 
 protocol CollectionDetailPresenterProtocol {
     func viewDidLoad()
+    func didTapAuthorButton()
 }
 
 final class CollectionDetailPresenter {
@@ -48,6 +49,10 @@ extension CollectionDetailPresenter: CollectionDetailPresenterProtocol {
     
     func viewDidLoad() {
         state = .loading
+    }
+    
+    func didTapAuthorButton() {
+        view?.navigateToAuthorWebViewController()
     }
     
 }
