@@ -15,6 +15,7 @@ protocol CollectionsPresenterProtocol {
     func viewDidLoad()
     func sortCollectionsByName()
     func sortCollectionsByNFTCount()
+    func didSelectCollection(at index: Int)
 }
 
 final class CollectionsPresenter {
@@ -49,6 +50,13 @@ extension CollectionsPresenter: CollectionsPresenterProtocol {
         
     }
     
+    func didSelectCollection(at index: Int) {
+        guard case let .data(collections) = state else { return }
+        let id = collections[index].id
+        let input = CollectionDetailInput(id: id)
+        view?.navigateToCollectionDetail(with: input)
+    }
+    
 }
 
 // MARK: - Private Methods
@@ -58,7 +66,7 @@ private extension CollectionsPresenter {
     func stateDidChange(_ state: CollectionsState) {
         switch state {
         case .initial:
-            assertionFailure("initial state")
+            assertionFailure("Initial state")
         case .loading:
             view?.showLoading()
             loadCollections()

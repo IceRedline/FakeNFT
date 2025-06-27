@@ -263,7 +263,7 @@ private extension CollectionDetailViewController {
 private extension CollectionDetailViewController {
     
     func backButtonDidTap() {
-        
+        navigationController?.popViewController(animated: true)
     }
     
     func authorNameButtonDidTap() {

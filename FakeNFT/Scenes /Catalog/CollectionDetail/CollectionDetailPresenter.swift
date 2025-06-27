@@ -59,7 +59,7 @@ private extension CollectionDetailPresenter {
     func stateDidChange(_ state: CollectionDetailState) {
         switch state {
         case .initial:
-            assertionFailure("initial state")
+            assertionFailure("Initial state")
         case .loading:
             view?.showLoading()
             loadDetails()

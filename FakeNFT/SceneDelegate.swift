@@ -14,13 +14,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         configureNavigationBarAppearance()
         configureTabBarAppearance()
         
-//        let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
-        let presenter = CollectionDetailPresenter(input: CollectionDetailInput(id: "id"))
-        let viewController = CollectionDetailViewController(presenter)
-        presenter.view = viewController
+        let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
 
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = /*tabBarController*/UINavigationController(rootViewController: viewController)
+        window.rootViewController = tabBarController
         window.makeKeyAndVisible()
         self.window = window
     }

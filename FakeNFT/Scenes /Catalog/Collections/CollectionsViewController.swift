@@ -2,6 +2,7 @@ import UIKit
 
 protocol CollectionsView: AnyObject, LoadingView, ErrorView {
     func displayCells(_ cellModels: [CollectionCellViewModel])
+    func navigateToCollectionDetail(with input: CollectionDetailInput)
 }
 
 final class CollectionsViewController: UITableViewController {
@@ -58,6 +59,13 @@ extension CollectionsViewController: CollectionsView {
     func displayCells(_ cellModels: [CollectionCellViewModel]) {
         self.cellModels = cellModels
         tableView.reloadData()
+    }
+    
+    func navigateToCollectionDetail(with input: CollectionDetailInput) {
+        let detailPresenter = CollectionDetailPresenter(input: input)
+        let detailViewController = CollectionDetailViewController(detailPresenter)
+        detailPresenter.view = detailViewController
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
     
 }
@@ -132,6 +140,11 @@ extension CollectionsViewController {
 // MARK: - Delegate
 
 extension CollectionsViewController {
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didSelectCollection(at: indexPath.row)
+    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         Constants.rowHeight
