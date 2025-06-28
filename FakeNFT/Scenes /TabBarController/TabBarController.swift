@@ -36,9 +36,24 @@ final class TabBarController: UITabBarController {
         
         let cartController = CartViewController()
         cartController.tabBarItem = cartTabBarItem
-
-        viewControllers = [catalogController, cartController]
+        let profileTab = createTab(
+            viewController: ProfileViewController(),
+            title: NSLocalizedString("Профиль", comment: ""),
+            imageName: "TabBarProfile"
+        )
+        viewControllers = [profileTab, catalogController, cartController]
 
         view.backgroundColor = .systemBackground
+        UITabBar.appearance().unselectedItemTintColor = .black
+    }
+
+    private func createTab(viewController: UIViewController, title: String, imageName: String) -> UINavigationController {
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.tabBarItem = UITabBarItem(
+            title: title,
+            image: UIImage(named: imageName),
+            selectedImage: nil
+        )
+        return navController
     }
 }
