@@ -12,39 +12,39 @@ final class TabBarController: UITabBarController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private let catalogTabBarItem = UITabBarItem(
+        title: NSLocalizedString("Tab.catalog", comment: ""),
+        image: UIImage(systemName: "square.stack.3d.up.fill"),
+        tag: 0
+    )
+    
+    private let cartTabBarItem = UITabBarItem(
+        title: "Корзина",
+        image: UIImage(named: "cartSelected"),
+        selectedImage: UIImage(named: "cartNotSelected")
+    )
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTabs()
-        view.backgroundColor = .systemBackground
-        UITabBar.appearance().unselectedItemTintColor = .black
-    }
 
-    private func setupTabs() {
+        let catalogController = TestCatalogViewController(
+            servicesAssembly: servicesAssembly
+        )
+        catalogController.tabBarItem = catalogTabBarItem
+        
+        let cartController = CartViewController()
+        cartController.tabBarItem = cartTabBarItem
         let profileTab = createTab(
             viewController: ProfileViewController(),
             title: NSLocalizedString("Профиль", comment: ""),
             imageName: "TabBarProfile"
         )
+        viewControllers = [profileTab, catalogController, cartController]
 
-        let catalogTab = createTab(
-            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
-            title: NSLocalizedString("Каталог", comment: ""),
-            imageName: "Catalog"
-        )
-
-        let cartTab = createTab(
-            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
-            title: NSLocalizedString("Корзина", comment: ""),
-            imageName: "Cart"
-        )
-        let statisticTab = createTab(
-            viewController: TestCatalogViewController(servicesAssembly: servicesAssembly),
-            title: NSLocalizedString("Статистика", comment: ""),
-            imageName: "Statistics"
-        )
-
-        viewControllers = [profileTab, catalogTab, cartTab, statisticTab]
+        view.backgroundColor = .systemBackground
+        UITabBar.appearance().unselectedItemTintColor = .black
     }
 
     private func createTab(viewController: UIViewController, title: String, imageName: String) -> UINavigationController {
