@@ -1,5 +1,5 @@
 //
-//  NftCollection.swift
+//  NftCollectionSummary.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 13.06.2025.
@@ -7,36 +7,42 @@
 
 import UIKit
 
-struct NftCollection {
+struct NftCollectionSummary {
+    let id: String
     let name: String
     let cover: UIImage // TODO: заменить на url
-    let nfts: [String]
+    let nftCount: Int
     
     static let mockData = [
-        NftCollection(
+        NftCollectionSummary(
+            id: "1",
             name: "singulis epicuri",
             cover: UIImage(resource: .collection1),
-            nfts: ["", "", "", "", "", ""]
+            nftCount: 9
         ),
-        NftCollection(
+        NftCollectionSummary(
+            id: "2",
             name: "unum reque",
             cover: UIImage(resource: .collection2),
-            nfts: ["", "", "", "", "", "", "", "", "", "", "", ""]
+            nftCount: 4
         ),
-        NftCollection(
+        NftCollectionSummary(
+            id: "3",
             name: "quem varius",
             cover: UIImage(resource: .collection3),
-            nfts: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            nftCount: 7
         ),
-        NftCollection(
+        NftCollectionSummary(
+            id: "4",
             name: "option moderatius",
             cover: UIImage(resource: .collection4),
-            nfts: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            nftCount: 11
         ),
-        NftCollection(
+        NftCollectionSummary(
+            id: "5",
             name: "simul dolore",
             cover: UIImage(resource: .collection5),
-            nfts: ["", ""]
+            nftCount: 2
         )
     ]
 }

@@ -22,11 +22,11 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let catalogPresenter = CatalogPresenter()
-        let catalogController = CatalogViewController(catalogPresenter)
-        let navController = UINavigationController(rootViewController: catalogController)
-        catalogPresenter.view = catalogController
-        catalogController.tabBarItem = catalogTabBarItem
+        let presenter = CollectionsPresenter()
+        let controller = CollectionsViewController(presenter)
+        let navController = UINavigationController(rootViewController: controller)
+        presenter.view = controller
+        controller.tabBarItem = catalogTabBarItem
 
         viewControllers = [navController]
 
