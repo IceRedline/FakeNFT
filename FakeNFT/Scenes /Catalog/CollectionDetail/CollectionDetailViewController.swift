@@ -93,7 +93,7 @@ final class CollectionDetailViewController: UIViewController {
         button.titleLabel?.font = .caption1
         button.contentHorizontalAlignment = .leading
         button.contentEdgeInsets = .zero
-        button.addTarget(self, action: #selector(authorNameButtonDidTap), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapAuthorNameButton), for: .touchUpInside)
         return button
     }()
     
@@ -248,7 +248,7 @@ private extension CollectionDetailViewController {
             image: UIImage(resource: .backward),
             style: .plain,
             target: self,
-            action: #selector(backButtonDidTap)
+            action: #selector(didTapBackButton)
         )
         navigationItem.leftBarButtonItem = backButton
     }
@@ -272,11 +272,11 @@ private extension CollectionDetailViewController {
 @objc
 private extension CollectionDetailViewController {
     
-    func backButtonDidTap() {
+    func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
     
-    func authorNameButtonDidTap() {
+    func didTapAuthorNameButton() {
         presenter.didTapAuthorButton()
     }
     

@@ -84,13 +84,8 @@ final class RatingView: UIView {
     
     private func updateStars() {
         for (index, imageView) in starImageViews.enumerated() {
-            if index < rating {
-                imageView.image = UIImage(systemName: "star.fill")
-                imageView.tintColor = UIColor(resource: .ypYellow)
-            } else {
-                imageView.image = UIImage(systemName: "star")
-                imageView.tintColor = UIColor(resource: .ypLightGray)
-            }
+            imageView.image = UIImage(systemName: index < rating ? "star.fill" : "star")
+            imageView.tintColor = UIColor(resource: index < rating ? .ypYellow : .ypLightGray)
         }
     }
     

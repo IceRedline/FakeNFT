@@ -116,7 +116,7 @@ private extension AuthorWebViewController {
             image: UIImage(resource: .backward),
             style: .plain,
             target: self,
-            action: #selector(backButtonDidTap)
+            action: #selector(didTapBackButton)
         )
         navigationItem.leftBarButtonItem = backButton
     }
@@ -135,7 +135,7 @@ private extension AuthorWebViewController {
 @objc
 private extension AuthorWebViewController {
     
-    func backButtonDidTap() {
+    func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
     

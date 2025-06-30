@@ -15,6 +15,6 @@ struct DefaultAuthorWebRequestBuilder: AuthorWebRequestBuilder {
     private let url = URL(string: "https://practicum.yandex.ru/ios-developer/?from=catalog")!
     
     func makeRequest() -> URLRequest {
-        return URLRequest(url: url)
+        URLRequest(url: url)
     }
 }
