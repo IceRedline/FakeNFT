@@ -18,6 +18,7 @@ struct NftCollectionDetailInput {
 protocol NftCollectionDetailPresenterProtocol {
     func viewDidLoad()
     func didTapAuthorButton()
+    func didTapLikeButton(at index: Int, isLiked: Bool)
 }
 
 final class NftCollectionDetailPresenter {
@@ -57,6 +58,19 @@ extension NftCollectionDetailPresenter: NftCollectionDetailPresenterProtocol {
         view?.navigateToAuthorWebViewController()
     }
     
+    func didTapLikeButton(at index: Int, isLiked: Bool) {
+        guard case let .data(viewModel) = state else { return }
+        let id = viewModel.nfts[index].id
+        servicesAssembly.stateService.setLike(nftId: id, isLiked: isLiked) { [weak self] result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                self?.state = .failed(error)
+            }
+        }
+    }
+    
 }
 
 // MARK: - Private Methods
@@ -89,24 +103,43 @@ private extension NftCollectionDetailPresenter {
                     self.state = .failed(NetworkClientError.parsingError)
                     return
                 }
-                
+
                 self.servicesAssembly.nftService.loadNftSummaries(by: detail.nfts) { summariesResult in
                     switch summariesResult {
                     case .success(let summaries):
-                        let fullDetail = NftCollectionDetailViewModel(collection: detail, nfts: summaries)
-                        self.state = .data(fullDetail)
+                        self.servicesAssembly.stateService.getLikedNfts { likedResult in
+                            switch likedResult {
+                            case .success(let likedIds):
+                                let likedSet = Set(likedIds)
+                                let summariesWithLikes = summaries.compactMap { summary in
+                                    NftSummary(
+                                        id: summary.id,
+                                        name: summary.name,
+                                        cover: summary.cover,
+                                        rating: summary.rating,
+                                        price: summary.price,
+                                        isFavorite: likedSet.contains(summary.id),
+                                        isInCart: false
+                                    )
+                                }
+                                let fullDetail = NftCollectionDetailViewModel(collection: detail, nfts: summariesWithLikes)
+                                self.state = .data(fullDetail)
+                            case .failure(let error):
+                                self.state = .failed(error)
+                            }
+                        }
                     case .failure(let error):
                         self.state = .failed(error)
                     }
                 }
-                
+
             case .failure(let error):
                 self.state = .failed(error)
             }
         }
     }
     
-    private func makeErrorModel(_ error: Error) -> ErrorModel {
+    func makeErrorModel(_ error: Error) -> ErrorModel {
         let message: String
         switch error {
         case is NetworkClientError:

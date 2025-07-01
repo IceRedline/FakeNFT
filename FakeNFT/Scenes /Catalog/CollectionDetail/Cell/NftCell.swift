@@ -8,6 +8,7 @@
 import UIKit
 
 struct NftCellViewModel {
+    let id: String
     let cover: URL
     let rating: Int
     let name: String
@@ -16,12 +17,13 @@ struct NftCellViewModel {
     let isInCart: Bool
     
     init(_ nft: NftSummary) {
+        self.id = nft.id
         self.cover = nft.cover
         self.rating = nft.rating
         self.name = nft.name
         self.price = String(nft.price)
-        self.isFavorite = false
-        self.isInCart = false
+        self.isFavorite = nft.isFavorite
+        self.isInCart = nft.isInCart
     }
 }
 
@@ -84,6 +86,11 @@ final class NftCell: UICollectionViewCell {
     // MARK: - Static Properties
     
     static let reuseIdentifier = "NftCell"
+    
+    // MARK: - Internal Properties
+    
+    var onFavoriteButtonTap: ((Bool) -> Void)?
+    var onCartButtonTap: ((Bool) -> Void)?
     
     // MARK: - Private Properties
     
@@ -182,10 +189,12 @@ private extension NftCell {
     
     func favoriteButtonDidTap() {
         favoriteButton.isSelected.toggle()
+        onFavoriteButtonTap?(favoriteButton.isSelected)
     }
     
     func cartButtonDidTap() {
         cartButton.isSelected.toggle()
+        onCartButtonTap?(cartButton.isSelected)
     }
     
 }
