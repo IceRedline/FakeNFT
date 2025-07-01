@@ -306,6 +306,9 @@ extension NftCollectionDetailViewController: UICollectionViewDataSource {
         cell.onFavoriteButtonTap = { [weak self] isFavorite in
             self?.presenter.didTapLikeButton(at: indexPath.row, isLiked: isFavorite)
         }
+        cell.onCartButtonTap = { [weak self] isInCart in
+            self?.presenter.didTapCartButton(at: indexPath.row, isInCart: isInCart)
+        }
         
         return cell
     }

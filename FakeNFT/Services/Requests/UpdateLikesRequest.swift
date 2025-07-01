@@ -1,5 +1,5 @@
 //
-//  UpdateProfileRequest.swift
+//  UpdateLikesRequest.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 01.07.2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UpdateProfileRequest: NetworkRequest {
+struct UpdateLikesRequest: NetworkRequest {
     let id: String
     let likes: [String]
 

@@ -19,6 +19,7 @@ protocol NftCollectionDetailPresenterProtocol {
     func viewDidLoad()
     func didTapAuthorButton()
     func didTapLikeButton(at index: Int, isLiked: Bool)
+    func didTapCartButton(at index: Int, isInCart: Bool)
 }
 
 final class NftCollectionDetailPresenter {
@@ -71,6 +72,19 @@ extension NftCollectionDetailPresenter: NftCollectionDetailPresenterProtocol {
         }
     }
     
+    func didTapCartButton(at index: Int, isInCart: Bool) {
+        guard case let .data(viewModel) = state else { return }
+        let id = viewModel.nfts[index].id
+        servicesAssembly.stateService.updateCart(nftId: id, isInCart: isInCart) { [weak self] result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                self?.state = .failed(error)
+            }
+        }
+    }
+    
 }
 
 // MARK: - Private Methods
@@ -107,27 +121,59 @@ private extension NftCollectionDetailPresenter {
                 self.servicesAssembly.nftService.loadNftSummaries(by: detail.nfts) { summariesResult in
                     switch summariesResult {
                     case .success(let summaries):
+                        let group = DispatchGroup()
+                        
+                        var likedIds: [String] = []
+                        var cartIds: [String] = []
+                        var hasError: Error?
+                        
+                        group.enter()
                         self.servicesAssembly.stateService.getLikedNfts { likedResult in
+                            defer { group.leave() }
                             switch likedResult {
-                            case .success(let likedIds):
-                                let likedSet = Set(likedIds)
-                                let summariesWithLikes = summaries.compactMap { summary in
-                                    NftSummary(
-                                        id: summary.id,
-                                        name: summary.name,
-                                        cover: summary.cover,
-                                        rating: summary.rating,
-                                        price: summary.price,
-                                        isFavorite: likedSet.contains(summary.id),
-                                        isInCart: false
-                                    )
-                                }
-                                let fullDetail = NftCollectionDetailViewModel(collection: detail, nfts: summariesWithLikes)
-                                self.state = .data(fullDetail)
+                            case .success(let ids):
+                                likedIds = ids
                             case .failure(let error):
-                                self.state = .failed(error)
+                                hasError = error
                             }
                         }
+                        
+                        group.enter()
+                        self.servicesAssembly.stateService.getOrder { orderResult in
+                            defer { group.leave() }
+                            switch orderResult {
+                            case .success(let order):
+                                cartIds = order.nfts
+                            case .failure(let error):
+                                hasError = error
+                            }
+                        }
+                        
+                        group.notify(queue: .main) {
+                            if let error = hasError {
+                                self.state = .failed(error)
+                                return
+                            }
+                            
+                            let likedSet = Set(likedIds)
+                            let cartSet = Set(cartIds)
+                            
+                            let summariesWithState = summaries.compactMap { summary in
+                                NftSummary(
+                                    id: summary.id,
+                                    name: summary.name,
+                                    cover: summary.cover,
+                                    rating: summary.rating,
+                                    price: summary.price,
+                                    isFavorite: likedSet.contains(summary.id),
+                                    isInCart: cartSet.contains(summary.id)
+                                )
+                            }
+                            
+                            let fullDetail = NftCollectionDetailViewModel(collection: detail, nfts: summariesWithState)
+                            self.state = .data(fullDetail)
+                        }
+                        
                     case .failure(let error):
                         self.state = .failed(error)
                     }
