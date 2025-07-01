@@ -9,6 +9,7 @@ import UIKit
 
 enum ImageLoaderError: Error {
     case invalidData
+    case cancelledDownload
 }
 
 protocol ImageLoaderProtocol {
@@ -43,6 +44,13 @@ final class ImageLoader: ImageLoaderProtocol {
                 self?.activeTasks.removeValue(forKey: url)
             }
             
+            if let error = error as? URLError, error.code == .cancelled {
+                DispatchQueue.main.async {
+                    completion(.failure(ImageLoaderError.cancelledDownload))
+                }
+                return
+            }
+            
             if let error = error {
                 DispatchQueue.main.async {
                     completion(.failure(error))
@@ -72,5 +80,5 @@ final class ImageLoader: ImageLoaderProtocol {
         activeTasks[url]?.cancel()
         activeTasks.removeValue(forKey: url)
     }
-    
 }
+

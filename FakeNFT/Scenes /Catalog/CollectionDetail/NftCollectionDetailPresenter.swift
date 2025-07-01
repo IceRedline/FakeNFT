@@ -8,7 +8,10 @@
 import Foundation
 
 enum NftCollectionDetailState {
-    case initial, loading, failed(Error), data(NftCollectionDetailViewModel)
+    case initial
+    case loading
+    case failed(Error)
+    case data(NftCollectionDetailViewModel)
 }
 
 struct NftCollectionDetailInput {

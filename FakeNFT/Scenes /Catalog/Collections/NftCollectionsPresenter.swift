@@ -8,7 +8,10 @@
 import Foundation
 
 enum NftCollectionsState {
-    case initial, loading, failed(Error), data([NftCollectionSummary])
+    case initial
+    case loading
+    case failed(Error)
+    case data([NftCollectionSummary])
 }
 
 protocol NftCollectionsPresenterProtocol {
