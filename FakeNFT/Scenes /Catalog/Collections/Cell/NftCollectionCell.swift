@@ -1,5 +1,5 @@
 //
-//  CollectionCell.swift
+//  NftCollectionCell.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 13.06.2025.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-struct CollectionCellViewModel {
+struct NftCollectionCellViewModel {
     let name: String
     let nftCount: String
-    let cover: UIImage
+    let cover: URL
     
     init(_ collection: NftCollectionSummary) {
         self.name = collection.name
@@ -19,7 +19,7 @@ struct CollectionCellViewModel {
     }
 }
 
-final class CollectionCell: UITableViewCell {
+final class NftCollectionCell: UITableViewCell {
     
     // MARK: - Constants
     
@@ -28,7 +28,12 @@ final class CollectionCell: UITableViewCell {
         static let coverHeight: CGFloat = 140
         static let cornerRadius: CGFloat = 12
         static let labelTopOffset: CGFloat = 4
+        static let bottomOffset: CGFloat = 8
     }
+    
+    // MARK: - Private Properties
+    
+    private var currentImageURL: URL?
     
     // MARK: - Subviews
     
@@ -37,6 +42,7 @@ final class CollectionCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Constants.cornerRadius
         imageView.clipsToBounds = true
+        imageView.backgroundColor = UIColor(resource: .ypLightGray)
         return imageView
     }()
     
@@ -44,12 +50,13 @@ final class CollectionCell: UITableViewCell {
         let label = UILabel()
         label.font = .bodyBold
         label.textColor = UIColor(resource: .ypBlack)
+        label.numberOfLines = 2
         return label
     }()
     
     // MARK: - Static Properties
     
-    static let reuseIdentifier = "CollectionCell"
+    static let reuseIdentifier = "NftCollectionCell"
     
     // MARK: - Init
     
@@ -62,25 +69,38 @@ final class CollectionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-// MARK: - Internal Methods
-
-extension CollectionCell {
+    // MARK: - Lifecycle
     
-    func configure(with viewModel: CollectionCellViewModel) {
-        coverImageView.image = viewModel.cover
-        nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftCount))"
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        if let url = currentImageURL {
+            coverImageView.cancelImageLoad(for: url)
+        }
+        coverImageView.image = nil
+        nameAndCountLabel.text = nil
+        currentImageURL = nil
     }
     
 }
 
+// MARK: - Internal Methods
+
+extension NftCollectionCell {
+    
+    func configure(with viewModel: NftCollectionCellViewModel) {
+        currentImageURL = viewModel.cover
+        coverImageView.loadImage(from: viewModel.cover)
+        nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftCount))"
+    }
+}
+
 // MARK: - Private Methods
 
-private extension CollectionCell {
+private extension NftCollectionCell {
     
     func setupCell() {
-        contentView.backgroundColor = UIColor(resource: .ypWhite)
+        backgroundColor = UIColor(resource: .ypWhite)
+        selectionStyle = .none
         
         [coverImageView, nameAndCountLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -95,8 +115,8 @@ private extension CollectionCell {
             
             nameAndCountLabel.leadingAnchor.constraint(equalTo: coverImageView.leadingAnchor),
             nameAndCountLabel.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
-            nameAndCountLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.labelTopOffset)
+            nameAndCountLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.labelTopOffset),
+            nameAndCountLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomOffset)
         ])
     }
-    
 }

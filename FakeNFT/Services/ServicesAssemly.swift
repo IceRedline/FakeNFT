@@ -1,4 +1,6 @@
 final class ServicesAssembly {
+    
+    var stateService: StateService
 
     private let networkClient: NetworkClient
     private let nftStorage: NftStorage
@@ -9,6 +11,11 @@ final class ServicesAssembly {
     ) {
         self.networkClient = networkClient
         self.nftStorage = nftStorage
+        self.stateService = DefaultStateService(networkClient: networkClient)
+    }
+    
+    var collectionService: NftCollectionService {
+        DefaultNftCollectionService(networkClient: networkClient)
     }
 
     var nftService: NftService {
@@ -17,4 +24,5 @@ final class ServicesAssembly {
             storage: nftStorage
         )
     }
+    
 }

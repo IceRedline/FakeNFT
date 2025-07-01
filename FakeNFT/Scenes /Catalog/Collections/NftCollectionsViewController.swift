@@ -1,11 +1,11 @@
 import UIKit
 
-protocol CollectionsView: AnyObject, LoadingView, ErrorView {
-    func displayCells(_ cellModels: [CollectionCellViewModel])
-    func navigateToCollectionDetail(with input: CollectionDetailInput)
+protocol NftCollectionsView: AnyObject, LoadingView, ErrorView {
+    func displayCells(_ cellModels: [NftCollectionCellViewModel])
+    func navigateToCollectionDetail(with input: NftCollectionDetailInput, servicesAssembly: ServicesAssembly)
 }
 
-final class CollectionsViewController: UITableViewController {
+final class NftCollectionsViewController: UITableViewController {
     
     // MARK: - Constants
     
@@ -26,12 +26,12 @@ final class CollectionsViewController: UITableViewController {
     
     // MARK: - Private Properties
     
-    private var presenter: CollectionsPresenterProtocol
-    private var cellModels: [CollectionCellViewModel] = []
+    private var presenter: NftCollectionsPresenterProtocol
+    private var cellModels: [NftCollectionCellViewModel] = []
     
     // MARK: - Init
 
-    init(_ presenter: CollectionsPresenterProtocol) {
+    init(_ presenter: NftCollectionsPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,16 +54,16 @@ final class CollectionsViewController: UITableViewController {
 
 // MARK: - CollectionsView
 
-extension CollectionsViewController: CollectionsView {
+extension NftCollectionsViewController: NftCollectionsView {
     
-    func displayCells(_ cellModels: [CollectionCellViewModel]) {
+    func displayCells(_ cellModels: [NftCollectionCellViewModel]) {
         self.cellModels = cellModels
         tableView.reloadData()
     }
     
-    func navigateToCollectionDetail(with input: CollectionDetailInput) {
-        let detailPresenter = CollectionDetailPresenter(input: input)
-        let detailViewController = CollectionDetailViewController(detailPresenter)
+    func navigateToCollectionDetail(with input: NftCollectionDetailInput, servicesAssembly: ServicesAssembly) {
+        let detailPresenter = NftCollectionDetailPresenter(servicesAssembly: servicesAssembly, input: input)
+        let detailViewController = NftCollectionDetailViewController(detailPresenter)
         detailPresenter.view = detailViewController
         navigationController?.pushViewController(detailViewController, animated: true)
     }
@@ -72,7 +72,7 @@ extension CollectionsViewController: CollectionsView {
 
 // MARK: - Private Methods
 
-private extension CollectionsViewController {
+private extension NftCollectionsViewController {
     
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
@@ -93,7 +93,7 @@ private extension CollectionsViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.contentInset.top = Constants.topInset
-        tableView.register(CollectionCell.self, forCellReuseIdentifier: CollectionCell.reuseIdentifier)
+        tableView.register(NftCollectionCell.self, forCellReuseIdentifier: NftCollectionCell.reuseIdentifier)
     }
     
 }
@@ -101,12 +101,16 @@ private extension CollectionsViewController {
 // MARK: - Actions
 
 @objc
-private extension CollectionsViewController {
+private extension NftCollectionsViewController {
     
     func sortButtonDidTap() {
         let alert = UIAlertController(title: nil, message: "Сортировка", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in })
-        alert.addAction(UIAlertAction(title: "По количеству NFT", style: .default) { _ in })
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter.sortCollectionsByName()
+        })
+        alert.addAction(UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
+            self?.presenter.sortCollectionsByNFTCount()
+        })
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
         present(alert, animated: true)
     }
@@ -115,7 +119,7 @@ private extension CollectionsViewController {
 
 // MARK: - Data Source
 
-extension CollectionsViewController {
+extension NftCollectionsViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cellModels.count
@@ -124,9 +128,9 @@ extension CollectionsViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
             let cell = tableView.dequeueReusableCell(
-                withIdentifier: CollectionCell.reuseIdentifier,
+                withIdentifier: NftCollectionCell.reuseIdentifier,
                 for: indexPath
-            ) as? CollectionCell
+            ) as? NftCollectionCell
         else {
             return UITableViewCell()
         }
@@ -139,7 +143,7 @@ extension CollectionsViewController {
 
 // MARK: - Delegate
 
-extension CollectionsViewController {
+extension NftCollectionsViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

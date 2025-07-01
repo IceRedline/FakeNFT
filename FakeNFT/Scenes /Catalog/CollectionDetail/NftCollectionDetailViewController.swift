@@ -1,5 +1,5 @@
 //
-//  CollectionDetailViewController.swift
+//  NftCollectionDetailViewController.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 15.06.2025.
@@ -7,33 +7,29 @@
 
 import UIKit
 
-struct CollectionDetailViewModel {
-    let cover: UIImage
+struct NftCollectionDetailViewModel {
+    let cover: URL
     let name: String
     let author: String
     let description: String
     let nfts: [NftCellViewModel]
     
-    init(_ collection: NftCollection) {
+    init(collection: NftCollectionDetail, nfts: [NftSummary]) {
         self.cover = collection.cover
         self.name = collection.name
         self.author = collection.author
         self.description = collection.description
-        self.nfts = [
-            NftCellViewModel(cover: UIImage(resource: .nft1), rating: 2, name: "Archie", price: "1 ETH", isFavorite: true, isInCart: false),
-            NftCellViewModel(cover: UIImage(resource: .nft2), rating: 5, name: "Ruby", price: "1 ETH", isFavorite: false, isInCart: true),
-            NftCellViewModel(cover: UIImage(resource: .nft3), rating: 4, name: "Nacho", price: "1 ETH", isFavorite: true, isInCart: false),
-            NftCellViewModel(cover: UIImage(resource: .nft4), rating: 3, name: "Biscuit", price: "1 ETH", isFavorite: false, isInCart: true)
-        ]
+        self.nfts = nfts.map { NftCellViewModel($0) }
     }
+    
 }
 
-protocol CollectionDetailView: AnyObject, LoadingView, ErrorView {
-    func displayDetails(_ viewModel: CollectionDetailViewModel)
+protocol NftCollectionDetailView: AnyObject, LoadingView, ErrorView {
+    func displayDetails(_ viewModel: NftCollectionDetailViewModel)
     func navigateToAuthorWebViewController()
 }
 
-final class CollectionDetailViewController: UIViewController {
+final class NftCollectionDetailViewController: UIViewController {
     
     // MARK: - Constants
     
@@ -132,12 +128,12 @@ final class CollectionDetailViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let presenter: CollectionDetailPresenterProtocol
+    private let presenter: NftCollectionDetailPresenterProtocol
     private var cellModels: [NftCellViewModel] = []
     
     // MARK: - Init
     
-    init(_ presenter: CollectionDetailPresenterProtocol) {
+    init(_ presenter: NftCollectionDetailPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -164,10 +160,10 @@ final class CollectionDetailViewController: UIViewController {
 
 // MARK: - CollectionDetailView
 
-extension CollectionDetailViewController: CollectionDetailView {
+extension NftCollectionDetailViewController: NftCollectionDetailView {
     
-    func displayDetails(_ viewModel: CollectionDetailViewModel) {
-        coverImageView.image = viewModel.cover
+    func displayDetails(_ viewModel: NftCollectionDetailViewModel) {
+        coverImageView.loadImage(from: viewModel.cover)
         nameLabel.text = viewModel.name
         authorNameButton.setTitle(viewModel.author, for: .normal)
         descriptionLabel.text = viewModel.description
@@ -189,7 +185,7 @@ extension CollectionDetailViewController: CollectionDetailView {
 
 // MARK: - Private Methods
 
-private extension CollectionDetailViewController {
+private extension NftCollectionDetailViewController {
     
     func setupViewController() {
         view.backgroundColor = UIColor(resource: .ypWhite)
@@ -270,7 +266,7 @@ private extension CollectionDetailViewController {
 // MARK: - Actions
 
 @objc
-private extension CollectionDetailViewController {
+private extension NftCollectionDetailViewController {
     
     func didTapBackButton() {
         navigationController?.popViewController(animated: true)
@@ -284,7 +280,7 @@ private extension CollectionDetailViewController {
 
 // MARK: - UICollectionViewDataSource
 
-extension CollectionDetailViewController: UICollectionViewDataSource {
+extension NftCollectionDetailViewController: UICollectionViewDataSource {
     
     func collectionView(
         _ collectionView: UICollectionView,
@@ -307,6 +303,13 @@ extension CollectionDetailViewController: UICollectionViewDataSource {
         }
         
         cell.configure(with: cellModels[indexPath.row])
+        cell.onFavoriteButtonTap = { [weak self] isFavorite in
+            self?.presenter.didTapLikeButton(at: indexPath.row, isLiked: isFavorite)
+        }
+        cell.onCartButtonTap = { [weak self] isInCart in
+            self?.presenter.didTapCartButton(at: indexPath.row, isInCart: isInCart)
+        }
+        
         return cell
     }
     
@@ -314,7 +317,7 @@ extension CollectionDetailViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension CollectionDetailViewController: UICollectionViewDelegateFlowLayout {
+extension NftCollectionDetailViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(
         _ collectionView: UICollectionView,

@@ -22,8 +22,11 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let presenter = CollectionsPresenter()
-        let controller = CollectionsViewController(presenter)
+        let networkClient = DefaultNetworkClient()
+        
+        let collectionsService = DefaultNftCollectionService(networkClient: networkClient)
+        let presenter = NftCollectionsPresenter(servicesAssembly: servicesAssembly)
+        let controller = NftCollectionsViewController(presenter)
         let navController = UINavigationController(rootViewController: controller)
         presenter.view = controller
         controller.tabBarItem = catalogTabBarItem
