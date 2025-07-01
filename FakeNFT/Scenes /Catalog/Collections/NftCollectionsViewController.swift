@@ -105,8 +105,12 @@ private extension NftCollectionsViewController {
     
     func sortButtonDidTap() {
         let alert = UIAlertController(title: nil, message: "Сортировка", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in })
-        alert.addAction(UIAlertAction(title: "По количеству NFT", style: .default) { _ in })
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter.sortCollectionsByName()
+        })
+        alert.addAction(UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
+            self?.presenter.sortCollectionsByNFTCount()
+        })
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
         present(alert, animated: true)
     }

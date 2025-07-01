@@ -50,11 +50,15 @@ extension NftCollectionsPresenter: NftCollectionsPresenterProtocol {
     }
     
     func sortCollectionsByName() {
-        
+        guard case let .data(collections) = state else { return }
+        let sorted = collections.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        state = .data(sorted)
     }
-    
+
     func sortCollectionsByNFTCount() {
-        
+        guard case let .data(collections) = state else { return }
+        let sorted = collections.sorted { $0.nftCount > $1.nftCount }
+        state = .data(sorted)
     }
     
     func didSelectCollection(at index: Int) {
