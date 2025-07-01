@@ -1,5 +1,5 @@
 //
-//  CollectionCell.swift
+//  NftCollectionCell.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 13.06.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct CollectionCellViewModel {
+struct NftCollectionCellViewModel {
     let name: String
     let nftCount: String
     let cover: URL
@@ -19,7 +19,7 @@ struct CollectionCellViewModel {
     }
 }
 
-final class CollectionCell: UITableViewCell {
+final class NftCollectionCell: UITableViewCell {
     
     // MARK: - Constants
     
@@ -84,9 +84,9 @@ final class CollectionCell: UITableViewCell {
 
 // MARK: - Internal Methods
 
-extension CollectionCell {
+extension NftCollectionCell {
     
-    func configure(with viewModel: CollectionCellViewModel) {
+    func configure(with viewModel: NftCollectionCellViewModel) {
         currentImageURL = viewModel.cover
         coverImageView.loadImage(from: viewModel.cover)
         nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftCount))"
@@ -95,7 +95,7 @@ extension CollectionCell {
 
 // MARK: - Private Methods
 
-private extension CollectionCell {
+private extension NftCollectionCell {
     
     func setupCell() {
         backgroundColor = UIColor(resource: .ypWhite)

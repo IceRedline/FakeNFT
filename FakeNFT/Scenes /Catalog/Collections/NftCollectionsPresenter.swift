@@ -1,5 +1,5 @@
 //
-//  CollectionsPresenter.swift
+//  NftCollectionsPresenter.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 12.06.2025.
@@ -7,27 +7,27 @@
 
 import Foundation
 
-enum CollectionsState {
+enum NftCollectionsState {
     case initial, loading, failed(Error), data([NftCollectionSummary])
 }
 
-protocol CollectionsPresenterProtocol {
+protocol NftCollectionsPresenterProtocol {
     func viewDidLoad()
     func sortCollectionsByName()
     func sortCollectionsByNFTCount()
     func didSelectCollection(at index: Int)
 }
 
-final class CollectionsPresenter {
+final class NftCollectionsPresenter {
     
     // MARK: - Internal Properties
     
-    weak var view: CollectionsView?
+    weak var view: NftCollectionsView?
     
     // MARK: - Private Properties
     
-    private let collectionsService: CollectionsService
-    private var state: CollectionsState = .initial {
+    private let collectionsService: NftCollectionsService
+    private var state: NftCollectionsState = .initial {
         didSet {
             stateDidChange(state)
         }
@@ -35,7 +35,7 @@ final class CollectionsPresenter {
     
     // MARK: - Init
     
-    init(collectionsService: CollectionsService) {
+    init(collectionsService: NftCollectionsService) {
         self.collectionsService = collectionsService
     }
     
@@ -43,7 +43,7 @@ final class CollectionsPresenter {
 
 // MARK: - CollectionsPresenterProtocol
 
-extension CollectionsPresenter: CollectionsPresenterProtocol {
+extension NftCollectionsPresenter: NftCollectionsPresenterProtocol {
     
     func viewDidLoad() {
         state = .loading
@@ -68,9 +68,9 @@ extension CollectionsPresenter: CollectionsPresenterProtocol {
 
 // MARK: - Private Methods
 
-private extension CollectionsPresenter {
+private extension NftCollectionsPresenter {
     
-    func stateDidChange(_ state: CollectionsState) {
+    func stateDidChange(_ state: NftCollectionsState) {
         switch state {
         case .initial:
             assertionFailure("Initial state")
@@ -83,7 +83,7 @@ private extension CollectionsPresenter {
             // TODO: show error
         case .data(let collections):
             view?.hideLoading()
-            view?.displayCells(collections.map { CollectionCellViewModel($0) })
+            view?.displayCells(collections.map { NftCollectionCellViewModel($0) })
         }
     }
     
