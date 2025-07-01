@@ -10,7 +10,7 @@ import UIKit
 struct CollectionCellViewModel {
     let name: String
     let nftCount: String
-    let cover: UIImage
+    let cover: URL
     
     init(_ collection: NftCollectionSummary) {
         self.name = collection.name
@@ -28,7 +28,12 @@ final class CollectionCell: UITableViewCell {
         static let coverHeight: CGFloat = 140
         static let cornerRadius: CGFloat = 12
         static let labelTopOffset: CGFloat = 4
+        static let bottomOffset: CGFloat = 8
     }
+    
+    // MARK: - Private Properties
+    
+    private var currentImageURL: URL?
     
     // MARK: - Subviews
     
@@ -37,6 +42,7 @@ final class CollectionCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Constants.cornerRadius
         imageView.clipsToBounds = true
+        imageView.backgroundColor = UIColor(resource: .ypLightGray) // placeholder цвет
         return imageView
     }()
     
@@ -44,6 +50,7 @@ final class CollectionCell: UITableViewCell {
         let label = UILabel()
         label.font = .bodyBold
         label.textColor = UIColor(resource: .ypBlack)
+        label.numberOfLines = 2
         return label
     }()
     
@@ -62,6 +69,17 @@ final class CollectionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        if let url = currentImageURL {
+            coverImageView.cancelImageLoad(for: url)
+        }
+        coverImageView.image = nil
+        nameAndCountLabel.text = nil
+        currentImageURL = nil
+    }
 }
 
 // MARK: - Internal Methods
@@ -69,10 +87,10 @@ final class CollectionCell: UITableViewCell {
 extension CollectionCell {
     
     func configure(with viewModel: CollectionCellViewModel) {
-        coverImageView.image = viewModel.cover
+        currentImageURL = viewModel.cover
+        coverImageView.loadImage(from: viewModel.cover)
         nameAndCountLabel.text = "\(viewModel.name) (\(viewModel.nftCount))"
     }
-    
 }
 
 // MARK: - Private Methods
@@ -80,7 +98,8 @@ extension CollectionCell {
 private extension CollectionCell {
     
     func setupCell() {
-        contentView.backgroundColor = UIColor(resource: .ypWhite)
+        backgroundColor = UIColor(resource: .ypWhite)
+        selectionStyle = .none
         
         [coverImageView, nameAndCountLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -95,8 +114,8 @@ private extension CollectionCell {
             
             nameAndCountLabel.leadingAnchor.constraint(equalTo: coverImageView.leadingAnchor),
             nameAndCountLabel.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
-            nameAndCountLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.labelTopOffset)
+            nameAndCountLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.labelTopOffset),
+            nameAndCountLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomOffset)
         ])
     }
-    
 }

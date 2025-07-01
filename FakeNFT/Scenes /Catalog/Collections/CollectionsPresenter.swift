@@ -26,10 +26,17 @@ final class CollectionsPresenter {
     
     // MARK: - Private Properties
     
+    private let collectionsService: CollectionsService
     private var state: CollectionsState = .initial {
         didSet {
             stateDidChange(state)
         }
+    }
+    
+    // MARK: - Init
+    
+    init(collectionsService: CollectionsService) {
+        self.collectionsService = collectionsService
     }
     
 }
@@ -72,6 +79,7 @@ private extension CollectionsPresenter {
             loadCollections()
         case .failed(let error):
             view?.hideLoading()
+            print(error.localizedDescription)
             // TODO: show error
         case .data(let collections):
             view?.hideLoading()
@@ -80,8 +88,14 @@ private extension CollectionsPresenter {
     }
     
     func loadCollections() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.state = .data(NftCollectionSummary.mockData)
+        collectionsService.loadCollections { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let collections):
+                self.state = .data(collections.compactMap { NftCollectionSummary(from: $0) })
+            case .failure(let error):
+                self.state = .failed(error)
+            }
         }
     }
     

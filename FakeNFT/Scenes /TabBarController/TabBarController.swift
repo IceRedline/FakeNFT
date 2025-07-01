@@ -22,7 +22,10 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let presenter = CollectionsPresenter()
+        let networkClient = DefaultNetworkClient()
+        
+        let collectionsService = DefaultCollectionsService(client: networkClient)
+        let presenter = CollectionsPresenter(collectionsService: collectionsService)
         let controller = CollectionsViewController(presenter)
         let navController = UINavigationController(rootViewController: controller)
         presenter.view = controller
