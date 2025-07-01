@@ -14,12 +14,12 @@ struct NftCollectionDetailViewModel {
     let description: String
     let nfts: [NftCellViewModel]
     
-    init(_ collection: NftCollectionDetail) {
+    init(collection: NftCollectionDetail, nfts: [NftSummary]) {
         self.cover = collection.cover
         self.name = collection.name
         self.author = collection.author
         self.description = collection.description
-        self.nfts = []
+        self.nfts = nfts.map { NftCellViewModel($0) }
     }
     
 }

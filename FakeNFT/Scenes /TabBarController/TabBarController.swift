@@ -24,8 +24,8 @@ final class TabBarController: UITabBarController {
 
         let networkClient = DefaultNetworkClient()
         
-        let collectionsService = DefaultNftCollectionService(client: networkClient)
-        let presenter = NftCollectionsPresenter(collectionsService: collectionsService)
+        let collectionsService = DefaultNftCollectionService(networkClient: networkClient)
+        let presenter = NftCollectionsPresenter(servicesAssembly: servicesAssembly)
         let controller = NftCollectionsViewController(presenter)
         let navController = UINavigationController(rootViewController: controller)
         presenter.view = controller

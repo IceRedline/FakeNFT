@@ -2,7 +2,7 @@ import UIKit
 
 protocol NftCollectionsView: AnyObject, LoadingView, ErrorView {
     func displayCells(_ cellModels: [NftCollectionCellViewModel])
-    func navigateToCollectionDetail(with input: NftCollectionDetailInput, collectionService: NftCollectionService)
+    func navigateToCollectionDetail(with input: NftCollectionDetailInput, servicesAssembly: ServicesAssembly)
 }
 
 final class NftCollectionsViewController: UITableViewController {
@@ -61,8 +61,8 @@ extension NftCollectionsViewController: NftCollectionsView {
         tableView.reloadData()
     }
     
-    func navigateToCollectionDetail(with input: NftCollectionDetailInput, collectionService: NftCollectionService) {
-        let detailPresenter = NftCollectionDetailPresenter(collectionService: collectionService, input: input)
+    func navigateToCollectionDetail(with input: NftCollectionDetailInput, servicesAssembly: ServicesAssembly) {
+        let detailPresenter = NftCollectionDetailPresenter(servicesAssembly: servicesAssembly, input: input)
         let detailViewController = NftCollectionDetailViewController(detailPresenter)
         detailPresenter.view = detailViewController
         navigationController?.pushViewController(detailViewController, animated: true)

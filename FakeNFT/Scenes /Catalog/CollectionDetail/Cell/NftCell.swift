@@ -8,12 +8,21 @@
 import UIKit
 
 struct NftCellViewModel {
-    let cover: UIImage
+    let cover: URL
     let rating: Int
     let name: String
     let price: String
     let isFavorite: Bool
     let isInCart: Bool
+    
+    init(_ nft: NftSummary) {
+        self.cover = nft.cover
+        self.rating = nft.rating
+        self.name = nft.name
+        self.price = String(nft.price)
+        self.isFavorite = false
+        self.isInCart = false
+    }
 }
 
 final class NftCell: UICollectionViewCell {
@@ -42,6 +51,7 @@ final class NftCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .bodyBold
         label.textColor = UIColor(resource: .ypBlack)
+        label.numberOfLines = 2
         return label
     }()
     
@@ -75,6 +85,10 @@ final class NftCell: UICollectionViewCell {
     
     static let reuseIdentifier = "NftCell"
     
+    // MARK: - Private Properties
+    
+    private var currentImageURL: URL?
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
@@ -86,6 +100,22 @@ final class NftCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        if let url = currentImageURL {
+            coverImageView.cancelImageLoad(for: url)
+        }
+        
+        coverImageView.image = nil
+        nameLabel.text = nil
+        currentImageURL = nil
+        priceLabel.text = nil
+        ratingView.rating = 0
+    }
+    
 }
 
 // MARK: - Internal Methods
@@ -93,7 +123,7 @@ final class NftCell: UICollectionViewCell {
 extension NftCell {
     
     func configure(with viewModel: NftCellViewModel) {
-        coverImageView.image = viewModel.cover
+        coverImageView.loadImage(from: viewModel.cover)
         nameLabel.text = viewModel.name
         priceLabel.text = viewModel.price
         ratingView.rating = viewModel.rating
@@ -126,6 +156,7 @@ private extension NftCell {
             
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.topAnchor.constraint(equalTo: ratingView.bottomAnchor, constant: Constants.nameLabelToRatingViewSpacing),
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: cartButton.leadingAnchor),
             
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Constants.priceLabelToNameLabelSpacing),

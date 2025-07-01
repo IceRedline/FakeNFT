@@ -19,8 +19,8 @@ final class DefaultNftCollectionService: NftCollectionService {
     
     private let client: NetworkClient
 
-    init(client: NetworkClient = DefaultNetworkClient()) {
-        self.client = client
+    init(networkClient: NetworkClient = DefaultNetworkClient()) {
+        self.client = networkClient
     }
 
     func loadCollections(completion: @escaping NftCollectionsGetCompletion) {

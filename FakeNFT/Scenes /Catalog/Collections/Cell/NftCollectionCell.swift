@@ -42,7 +42,7 @@ final class NftCollectionCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Constants.cornerRadius
         imageView.clipsToBounds = true
-        imageView.backgroundColor = UIColor(resource: .ypLightGray) // placeholder цвет
+        imageView.backgroundColor = UIColor(resource: .ypLightGray)
         return imageView
     }()
     
@@ -56,7 +56,7 @@ final class NftCollectionCell: UITableViewCell {
     
     // MARK: - Static Properties
     
-    static let reuseIdentifier = "CollectionCell"
+    static let reuseIdentifier = "NftCollectionCell"
     
     // MARK: - Init
     
@@ -80,6 +80,7 @@ final class NftCollectionCell: UITableViewCell {
         nameAndCountLabel.text = nil
         currentImageURL = nil
     }
+    
 }
 
 // MARK: - Internal Methods

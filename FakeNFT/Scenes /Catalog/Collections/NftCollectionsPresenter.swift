@@ -26,7 +26,7 @@ final class NftCollectionsPresenter {
     
     // MARK: - Private Properties
     
-    private let collectionService: NftCollectionService
+    private let servicesAssembly: ServicesAssembly
     private var state: NftCollectionsState = .initial {
         didSet {
             stateDidChange(state)
@@ -35,8 +35,8 @@ final class NftCollectionsPresenter {
     
     // MARK: - Init
     
-    init(collectionsService: NftCollectionService) {
-        self.collectionService = collectionsService
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
     }
     
 }
@@ -61,7 +61,7 @@ extension NftCollectionsPresenter: NftCollectionsPresenterProtocol {
         guard case let .data(collections) = state else { return }
         let id = collections[index].id
         let input = NftCollectionDetailInput(id: id)
-        view?.navigateToCollectionDetail(with: input, collectionService: collectionService)
+        view?.navigateToCollectionDetail(with: input, servicesAssembly: servicesAssembly)
     }
     
 }
@@ -88,7 +88,7 @@ private extension NftCollectionsPresenter {
     }
     
     func loadCollections() {
-        collectionService.loadCollections { [weak self] result in
+        servicesAssembly.collectionService.loadCollections { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let collections):

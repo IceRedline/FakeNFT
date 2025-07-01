@@ -8,7 +8,7 @@
 import Foundation
 
 enum NftCollectionDetailState {
-    case initial, loading, failed(Error), data(NftCollectionDetail)
+    case initial, loading, failed(Error), data(NftCollectionDetailViewModel)
 }
 
 struct NftCollectionDetailInput {
@@ -28,7 +28,7 @@ final class NftCollectionDetailPresenter {
     
     // MARK: - Private Properties
     
-    private let collectionService: NftCollectionService
+    private let servicesAssembly: ServicesAssembly
     private let input: NftCollectionDetailInput
     private var state: NftCollectionDetailState = .initial {
         didSet {
@@ -38,8 +38,8 @@ final class NftCollectionDetailPresenter {
     
     // MARK: - Init
     
-    init(collectionService: NftCollectionService, input: NftCollectionDetailInput) {
-        self.collectionService = collectionService
+    init(servicesAssembly: ServicesAssembly, input: NftCollectionDetailInput) {
+        self.servicesAssembly = servicesAssembly
         self.input = input
     }
     
@@ -73,22 +73,32 @@ private extension NftCollectionDetailPresenter {
         case .failed(let error):
             view?.hideLoading()
             // TODO: show error
-        case .data(let summary):
+        case .data(let viewModel):
             view?.hideLoading()
-            view?.displayDetails(NftCollectionDetailViewModel(summary))
+            view?.displayDetails(viewModel)
         }
     }
     
     func loadDetails() {
-        collectionService.loadCollection(by: input.id) { [weak self] result in
+        servicesAssembly.collectionService.loadCollection(by: input.id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                if let detail = NftCollectionDetail(from: response) {
-                    self.state = .data(detail)
-                } else {
+                guard let detail = NftCollectionDetail(from: response) else {
                     self.state = .failed(NetworkClientError.parsingError)
+                    return
                 }
+                
+                self.servicesAssembly.nftService.loadNftSummaries(by: detail.nfts) { summariesResult in
+                    switch summariesResult {
+                    case .success(let summaries):
+                        let fullDetail = NftCollectionDetailViewModel(collection: detail, nfts: summaries)
+                        self.state = .data(fullDetail)
+                    case .failure(let error):
+                        self.state = .failed(error)
+                    }
+                }
+                
             case .failure(let error):
                 self.state = .failed(error)
             }
