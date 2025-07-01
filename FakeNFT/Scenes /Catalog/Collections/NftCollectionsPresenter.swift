@@ -79,8 +79,8 @@ private extension NftCollectionsPresenter {
             loadCollections()
         case .failed(let error):
             view?.hideLoading()
-            print(error.localizedDescription)
-            // TODO: show error
+            let errorModel = makeErrorModel(error)
+            view?.showError(errorModel)
         case .data(let collections):
             view?.hideLoading()
             view?.displayCells(collections.map { NftCollectionCellViewModel($0) })
@@ -96,6 +96,21 @@ private extension NftCollectionsPresenter {
             case .failure(let error):
                 self.state = .failed(error)
             }
+        }
+    }
+    
+    func makeErrorModel(_ error: Error) -> ErrorModel {
+        let message: String
+        switch error {
+        case is NetworkClientError:
+            message = NSLocalizedString("Error.network", comment: "")
+        default:
+            message = NSLocalizedString("Error.unknown", comment: "")
+        }
+
+        let actionText = NSLocalizedString("Error.repeat", comment: "")
+        return ErrorModel(message: message, actionText: actionText) { [weak self] in
+            self?.state = .loading
         }
     }
     
