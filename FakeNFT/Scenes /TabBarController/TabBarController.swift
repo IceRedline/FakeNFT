@@ -28,22 +28,25 @@ final class TabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
-        catalogController.tabBarItem = catalogTabBarItem
         
-        let cartController = CartViewController()
-        cartController.tabBarItem = cartTabBarItem
         let profileTab = createTab(
             viewController: ProfileViewController(),
             title: NSLocalizedString("Профиль", comment: ""),
             imageName: "TabBarProfile"
         )
-        viewControllers = [profileTab, catalogController, cartController]
 
-        view.backgroundColor = .systemBackground
+        let catalogPresenter = NftCollectionsPresenter(servicesAssembly: servicesAssembly)
+        let catalogController = NftCollectionsViewController(catalogPresenter)
+        let catalogNavController = UINavigationController(rootViewController: catalogController)
+        catalogPresenter.view = catalogController
+        catalogController.tabBarItem = catalogTabBarItem
+        
+        let cartController = CartViewController()
+        cartController.tabBarItem = cartTabBarItem
+
+        viewControllers = [profileTab, catalogNavController, cartController]
+
+        view.backgroundColor = UIColor(resource: .ypWhite)
         UITabBar.appearance().unselectedItemTintColor = .black
     }
 
