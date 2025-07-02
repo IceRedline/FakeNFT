@@ -15,4 +15,5 @@ protocol CartViewControllerProtocol {
     func showEmptyLabel()
     func hideEmptyLabel()
     func presentDeleteVC(nftImage: UIImage, onConfirm: @escaping () -> Void)
+    func presentNetworkErrorAlert()
 }

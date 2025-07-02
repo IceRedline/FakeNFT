@@ -157,6 +157,12 @@ final class CartPresenter: NSObject,
     // MARK: - CartTableViewCellDelegate
     
     func didTapDelete(for cell: CartTableViewCell) {
+        
+        if nfts.count == 1 {
+            view?.presentNetworkErrorAlert()
+            return
+        }
+        
         guard let index = view?.tableView.indexPath(for: cell)?.row else { return }
         let cartNFT = nfts[index]
         let id = cartNFT.id
@@ -171,7 +177,7 @@ final class CartPresenter: NSObject,
                 case .success:
                     break
                 case .failure(let error):
-                    fatalError("ошибка: \(error)")
+                    fatalError("CartPresenter: ошибка при удалении nft с id: \(id) \(error)")
                 }
             }
             

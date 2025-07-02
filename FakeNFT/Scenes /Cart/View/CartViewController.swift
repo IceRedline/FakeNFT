@@ -187,7 +187,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             guard let self else { return }
             self.presenter?.clearCart()
         }
-
+        
         present(paymentVC, animated: true)
     }
     
@@ -198,7 +198,19 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         deleteVC.modalTransitionStyle = .crossDissolve
         present(deleteVC, animated: true)
     }
-
+    
+    func presentNetworkErrorAlert() {
+        let alert = UIAlertController(
+            title: "Ошибка",
+            message: "Произошла ошибка сети",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default, handler: { _ in
+            self.dismiss(animated: true)
+        }))
+        present(alert, animated: true)
+    }
+    
 }
 
 #Preview(body: {
