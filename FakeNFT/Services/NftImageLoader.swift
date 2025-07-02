@@ -1,5 +1,5 @@
 //
-//  ImageLoader.swift
+//  NftImageLoader.swift
 //  FakeNFT
 //
 //  Created by Danil Otmakhov on 01.07.2025.
@@ -7,17 +7,17 @@
 
 import UIKit
 
-enum ImageLoaderError: Error {
+enum NftImageLoaderError: Error {
     case invalidData
     case cancelledDownload
 }
 
-protocol ImageLoaderProtocol {
+protocol NftImageLoaderProtocol {
     func loadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void)
     func cancelLoad(for url: URL)
 }
 
-final class ImageLoader: ImageLoaderProtocol {
+final class NftImageLoader: NftImageLoaderProtocol {
     
     // MARK: - Private Properties
     
@@ -25,7 +25,7 @@ final class ImageLoader: ImageLoaderProtocol {
     private var activeTasks: [URL: URLSessionDataTask] = [:]
     private let queue = DispatchQueue(label: "ImageLoader", qos: .utility)
     
-    // MARK: - ImageServiceProtocol
+    // MARK: - NftImageLoaderProtocol
     
     func loadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
         let key = url.absoluteString as NSString
@@ -46,7 +46,7 @@ final class ImageLoader: ImageLoaderProtocol {
             
             if let error = error as? URLError, error.code == .cancelled {
                 DispatchQueue.main.async {
-                    completion(.failure(ImageLoaderError.cancelledDownload))
+                    completion(.failure(NftImageLoaderError.cancelledDownload))
                 }
                 return
             }
@@ -60,7 +60,7 @@ final class ImageLoader: ImageLoaderProtocol {
             
             guard let data = data, let image = UIImage(data: data) else {
                 DispatchQueue.main.async {
-                    completion(.failure(ImageLoaderError.invalidData))
+                    completion(.failure(NftImageLoaderError.invalidData))
                 }
                 return
             }

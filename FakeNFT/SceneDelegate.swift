@@ -24,6 +24,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.shadowColor = .clear
         appearance.backgroundColor = UIColor(resource: .ypWhite)
         UINavigationBar.appearance().tintColor = UIColor(resource: .ypBlack)
         UINavigationBar.appearance().standardAppearance = appearance

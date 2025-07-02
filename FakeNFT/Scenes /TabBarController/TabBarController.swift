@@ -12,27 +12,51 @@ final class TabBarController: UITabBarController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(systemName: "square.stack.3d.up.fill"),
         tag: 0
     )
+    
+    private let cartTabBarItem = UITabBarItem(
+        title: "Корзина",
+        image: UIImage(named: "cartSelected"),
+        selectedImage: UIImage(named: "cartNotSelected")
+    )
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let networkClient = DefaultNetworkClient()
         
-        let collectionsService = DefaultNftCollectionService(networkClient: networkClient)
-        let presenter = NftCollectionsPresenter(servicesAssembly: servicesAssembly)
-        let controller = NftCollectionsViewController(presenter)
-        let navController = UINavigationController(rootViewController: controller)
-        presenter.view = controller
-        controller.tabBarItem = catalogTabBarItem
+        let profileTab = createTab(
+            viewController: ProfileViewController(),
+            title: NSLocalizedString("Профиль", comment: ""),
+            imageName: "TabBarProfile"
+        )
 
-        viewControllers = [navController]
+        let catalogPresenter = NftCollectionsPresenter(servicesAssembly: servicesAssembly)
+        let catalogController = NftCollectionsViewController(catalogPresenter)
+        let catalogNavController = UINavigationController(rootViewController: catalogController)
+        catalogPresenter.view = catalogController
+        catalogController.tabBarItem = catalogTabBarItem
+        
+        let cartController = CartViewController()
+        cartController.tabBarItem = cartTabBarItem
+
+        viewControllers = [profileTab, catalogNavController, cartController]
 
         view.backgroundColor = UIColor(resource: .ypWhite)
+        UITabBar.appearance().unselectedItemTintColor = .black
+    }
+
+    private func createTab(viewController: UIViewController, title: String, imageName: String) -> UINavigationController {
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.tabBarItem = UITabBarItem(
+            title: title,
+            image: UIImage(named: imageName),
+            selectedImage: nil
+        )
+        return navController
     }
 }

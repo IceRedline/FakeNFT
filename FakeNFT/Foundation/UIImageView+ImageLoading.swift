@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImageView {
     
-    private static let loader = ImageLoader()
+    private static let loader = NftImageLoader()
     
     func loadImage(from url: URL, placeholder: UIImage? = nil) {
         image = placeholder
