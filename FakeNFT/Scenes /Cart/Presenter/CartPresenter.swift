@@ -58,7 +58,7 @@ final class CartPresenter: NSObject,
         
         var loadedNFTs: [CartNFTModel] = []
         let group = DispatchGroup()
-
+        
         for nftID in nftIDs {
             group.enter()
             
@@ -93,7 +93,7 @@ final class CartPresenter: NSObject,
                 }
             }
         }
-
+        
         group.notify(queue: .main) { [weak self] in
             guard let self else { return }
             self.nfts = loadedNFTs
@@ -157,29 +157,30 @@ final class CartPresenter: NSObject,
     // MARK: - CartTableViewCellDelegate
     
     func didTapDelete(for cell: CartTableViewCell) {
-        
         guard let index = view?.tableView.indexPath(for: cell)?.row else { return }
-        let id = nftIDs[index]
-        print("удаляется nft с ID: \(id)")
-        
-        servicesAssembly.stateService.updateCart(nftId: id, isInCart: false) { result in
-            switch result {
-            case .success:
-                break
-            case .failure(let error):
-                fatalError("ошибка")
-            }
-        }
-        
-        let nftImage = cell.nftImageView.image ?? UIImage()
+        let cartNFT = nfts[index]
+        let id = cartNFT.id
+        let nftImage = cartNFT.image
         
         view?.presentDeleteVC(nftImage: nftImage) { [weak self] in
+            guard let self else { return }
             
-            self?.nfts.removeAll(where: {$0.image == nftImage})
-            self?.view?.tableView.reloadData()
-            self?.updateLabelsNumbers()
-            self?.checkCart()
+            
+            self.servicesAssembly.stateService.updateCart(nftId: id, isInCart: false) { result in
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    fatalError("ошибка: \(error)")
+                }
+            }
+            
+            self.nfts.removeAll { $0.id == id }
+            self.view?.tableView.reloadData()
+            self.updateLabelsNumbers()
+            self.checkCart()
         }
-        print(nftIDs)
+        
+        print("🗑 Готовим к удалению NFT с ID: \(id)")
     }
 }
