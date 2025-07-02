@@ -8,6 +8,7 @@
 import UIKit
 
 struct CartNFTModel {
+    var id: String
     var image: UIImage
     var name: String
     var rating: Int

@@ -19,14 +19,88 @@ final class CartPresenter: NSObject,
     
     var view: CartViewControllerProtocol?
     
-    private var nfts: [CartNFTModel] = [
-        CartNFTModel(image: UIImage(named: "testNFT1") ?? UIImage(), name: "April", rating: 4, price: 1.78),
-        CartNFTModel(image: UIImage(named: "testNFT2") ?? UIImage(), name: "Greena", rating: 3, price: 2.23),
-        CartNFTModel(image: UIImage(named: "testNFT3") ?? UIImage(), name: "Spring", rating: 5, price: 1.05),
-    ]
+    let client = DefaultNetworkClient()
+    
+    private let servicesAssembly: ServicesAssembly
+    
+    private var nftIDs: [String] = []
+    private var nfts: [CartNFTModel] = []
+    
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+        super.init()
+    }
     
     func viewDidLoad() {
+        loadNFTIDs()
         updateLabelsNumbers()
+    }
+    
+    func loadNFTIDs() {
+        UIBlockingProgressHUD.show()
+        
+        client.send(request: OrderRequest(), type: Order.self) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let order):
+                print("Полученные NFT id: \(order)")
+                self.nftIDs = order.nfts
+                loadNFTsByID()
+            case .failure(let error):
+                print("Ошибка при загрузке ордера корзины: \(error.localizedDescription)")
+                UIBlockingProgressHUD.dismiss()
+            }
+        }
+    }
+    
+    func loadNFTsByID() {
+        UIBlockingProgressHUD.show()
+        
+        var loadedNFTs: [CartNFTModel] = []
+        let group = DispatchGroup()
+
+        for nftID in nftIDs {
+            group.enter()
+            
+            client.send(request: NFTRequest(id: nftID), type: NFTResponse.self) { [weak self] result in
+                defer { group.leave() }
+                guard let self else { return }
+                
+                switch result {
+                case .success(let nft):
+                    print("✅ Полученный NFT: \(nft)")
+                    
+                    guard
+                        let imageURL = nft.images.first,
+                        let imageData = try? Data(contentsOf: imageURL),
+                        let image = UIImage(data: imageData)
+                    else {
+                        print("⚠️ Не удалось загрузить изображение для \(nft.name)")
+                        return
+                    }
+                    
+                    let cartModel = CartNFTModel(
+                        id: nft.id,
+                        image: image,
+                        name: nft.name,
+                        rating: nft.rating,
+                        price: nft.price
+                    )
+                    loadedNFTs.append(cartModel)
+                    
+                case .failure(let error):
+                    print("❌ Ошибка при загрузке NFT \(nftID): \(error.localizedDescription)")
+                }
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            self.nfts = loadedNFTs
+            self.view?.tableView.reloadData()
+            self.updateLabelsNumbers()
+            UIBlockingProgressHUD.dismiss()
+        }
     }
     
     func sort(by parameter: SortParameter) {
@@ -83,6 +157,20 @@ final class CartPresenter: NSObject,
     // MARK: - CartTableViewCellDelegate
     
     func didTapDelete(for cell: CartTableViewCell) {
+        
+        guard let index = view?.tableView.indexPath(for: cell)?.row else { return }
+        let id = nftIDs[index]
+        print("удаляется nft с ID: \(id)")
+        
+        servicesAssembly.stateService.updateCart(nftId: id, isInCart: false) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                fatalError("ошибка")
+            }
+        }
+        
         let nftImage = cell.nftImageView.image ?? UIImage()
         
         view?.presentDeleteVC(nftImage: nftImage) { [weak self] in
@@ -92,5 +180,6 @@ final class CartPresenter: NSObject,
             self?.updateLabelsNumbers()
             self?.checkCart()
         }
+        print(nftIDs)
     }
 }

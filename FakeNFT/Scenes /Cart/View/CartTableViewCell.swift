@@ -36,6 +36,8 @@ final class CartTableViewCell: UITableViewCell {
         }
         
         nftImageView.layer.cornerRadius = Constants.corner12
+        nftImageView.clipsToBounds = true
+        nftImageView.contentMode = .scaleAspectFill
         nftNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         nftNameLabel.textColor = .ypBlack
         priceLabel.text = "Цена"
@@ -51,7 +53,9 @@ final class CartTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             nftImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            nftImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            nftImageView.widthAnchor.constraint(equalToConstant: 108),
+            nftImageView.heightAnchor.constraint(equalToConstant: 108),
+            nftImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
             nftNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
             nftNameLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             starsImageView.heightAnchor.constraint(equalToConstant: 12),
@@ -77,9 +81,5 @@ final class CartTableViewCell: UITableViewCell {
     
     @objc private func deleteButtonTapped() {
         delegate?.didTapDelete(for: self)
-    }
-    
-    @objc func currencyNameButtonTapped(_ sender: UIButton) {
-        // TODO: -
     }
 }
