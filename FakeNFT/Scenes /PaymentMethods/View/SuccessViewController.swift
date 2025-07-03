@@ -72,6 +72,7 @@ final class SuccessViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         onSuccess?()
+        UserDefaults.standard.set(true, forKey: "shouldShowEmptyCartLabel")
         self.presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 }

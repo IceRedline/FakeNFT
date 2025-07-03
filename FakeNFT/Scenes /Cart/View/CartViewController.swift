@@ -63,6 +63,8 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         let label = UILabel()
         label.text = Constants.emptyCartText
         label.textColor = .ypBlack
+        label.textAlignment = .center
+        label.backgroundColor = .white
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         label.isHidden = true
         return label
@@ -90,6 +92,14 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        
+        let shouldShowLabel = UserDefaults.standard.bool(forKey: "shouldShowEmptyCartLabel")
+        if shouldShowLabel {
+            showEmptyLabel()
+            UserDefaults.standard.set(false, forKey: "shouldShowEmptyCartLabel")
+        } else {
+            hideEmptyLabel()
+        }
         
         presenter?.viewDidLoad()
     }
@@ -129,6 +139,8 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
             tableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
             emptyCartLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyCartLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyCartLabel.heightAnchor.constraint(equalToConstant: 800),
+            emptyCartLabel.widthAnchor.constraint(equalToConstant: 500),
             
             nftCountLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 16),
             nftCountLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 16),
@@ -143,7 +155,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     func updateLabels(nftCount: Int, totalPrice: Double) {
         nftCountLabel.text = "\(nftCount) NFT"
-        nftTotalPriceLabel.text = "\(totalPrice) ETH"
+        nftTotalPriceLabel.text = String(format: "%.2f ETH", totalPrice)
     }
     
     func showEmptyLabel() {

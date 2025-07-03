@@ -121,15 +121,11 @@ final class CartPresenter: NSObject,
         self.view?.updateLabels(nftCount: count, totalPrice: totalPrice)
     }
     
-    func checkCart() {
-        nfts.isEmpty ? view?.showEmptyLabel() : view?.hideEmptyLabel()
-    }
-    
     func clearCart() {
         nfts.removeAll()
         view?.tableView.reloadData()
         view?.updateLabels(nftCount: 0, totalPrice: 0)
-        checkCart()
+        view?.showEmptyLabel()
     }
     
     // MARK: - UITableViewDataSource
@@ -184,7 +180,6 @@ final class CartPresenter: NSObject,
             self.nfts.removeAll { $0.id == id }
             self.view?.tableView.reloadData()
             self.updateLabelsNumbers()
-            self.checkCart()
         }
         
         print("🗑 Готовим к удалению NFT с ID: \(id)")
