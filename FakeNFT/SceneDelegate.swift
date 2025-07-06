@@ -8,8 +8,42 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         nftStorage: NftStorageImpl()
     )
 
-    func scene(_: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
-        let tabBarController = window?.rootViewController as? TabBarController
-        tabBarController?.servicesAssembly = servicesAssembly
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+        
+        configureNavigationBarAppearance()
+        configureTabBarAppearance()
+        
+        let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
+
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = tabBarController
+        window.makeKeyAndVisible()
+        self.window = window
     }
+    
+    private func configureNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.shadowColor = .clear
+        appearance.backgroundColor = UIColor(resource: .ypWhite)
+        UINavigationBar.appearance().tintColor = UIColor(resource: .ypBlack)
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
+    private func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = UIColor(resource: .ypWhite)
+        appearance.shadowColor = .clear
+
+        UITabBar.appearance().tintColor = UIColor(resource: .ypBlue)
+        UITabBar.appearance().unselectedItemTintColor = UIColor(resource: .ypBlack)
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
 }

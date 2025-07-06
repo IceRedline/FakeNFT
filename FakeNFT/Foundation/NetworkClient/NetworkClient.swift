@@ -67,7 +67,7 @@ struct DefaultNetworkClient: NetworkClient {
                 onResponse(.failure(NetworkClientError.urlSessionError))
                 return
             }
-
+            
             guard 200 ..< 300 ~= response.statusCode else {
                 onResponse(.failure(NetworkClientError.httpStatusCode(response.statusCode)))
                 return
